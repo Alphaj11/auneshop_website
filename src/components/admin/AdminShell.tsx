@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { Permission } from "@/lib/auth/permissions";
@@ -43,8 +44,8 @@ export function AdminShell({
 
   const sidebar = (
     <div className="flex h-full flex-col">
-      <Link href="/admin" className="px-6 py-6 font-display text-2xl tracking-[0.3em]">
-        AUNE <span className="ml-1 align-middle font-sans text-[10px] tracking-[0.2em] text-paper/50">ADMIN</span>
+      <Link href="/admin" className="flex items-center gap-2 px-6 py-6" aria-label="Administration, accueil">
+        <Logo tone="blanc" className="h-7 w-auto" /> <span className="font-sans text-[10px] tracking-[0.2em] text-paper/50">ADMIN</span>
       </Link>
       <nav className="flex-1 overflow-y-auto px-3" aria-label="Administration">
         <ul className="space-y-0.5">

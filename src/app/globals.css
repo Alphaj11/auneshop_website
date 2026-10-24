@@ -8,12 +8,12 @@
   --paper: #f4efe6;
   --paper-2: #ebe3d6;
   --paper-3: #e0d6c6;
-  --ink: #1e1b17;
+  --ink: #2a0b12; /* bordeaux presque noir, dérivé du logo */
   --ink-soft: #5b544b;
   --ink-mute: #6f675d;
   --line: #d8cfc1;
-  --terre: #b5562f;
-  --terre-ink: #9a4523; /* version texte, contraste AA sur papier */
+  --terre: #3e0913; /* bordeaux du logo */
+  --terre-ink: #3e0913; /* version texte, contraste AA sur papier */
   --sapin: #2f4a3a;
   --vanille: #e3cb86;
   --rose: #e3b9b3;

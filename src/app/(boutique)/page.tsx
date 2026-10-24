@@ -98,7 +98,7 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
       if (!newsletterEnabled) return null;
       return (
         <section key={s.id} className="mx-auto max-w-[1600px] px-5 py-24 md:px-10" aria-labelledby="newsletter-title">
-          <div className="grid gap-10 rounded-[3px] bg-sapin px-6 py-16 text-paper md:grid-cols-2 md:px-16 md:py-24">
+          <div className="grid gap-10 rounded-[3px] bg-terre px-6 py-16 text-paper md:grid-cols-2 md:px-16 md:py-24">
             <Reveal>
               <p className="eyebrow !text-paper/60">Newsletter</p>
               <h2 id="newsletter-title" className="display-lg mt-4">

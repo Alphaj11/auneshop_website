@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import type { StoreSettings } from "@/lib/settings-schema";
 import { MotionToggle } from "./MotionToggle";
 
@@ -59,12 +60,9 @@ export function Footer({ settings }: { settings: StoreSettings }) {
             </div>
           </div>
         </div>
-        <p
-          aria-hidden
-          className="select-none overflow-hidden py-6 text-center font-display text-[22vw] font-light leading-[0.8] tracking-[0.12em] text-paper/[0.07]"
-        >
-          {settings.store.name.toUpperCase()}
-        </p>
+        <div aria-hidden className="flex select-none justify-center overflow-hidden py-8 opacity-[0.12]">
+          <Logo tone="blanc" className="h-auto w-[78vw] max-w-[1100px]" />
+        </div>
         <div className="flex flex-col gap-5 border-t border-paper/15 py-8 text-xs text-paper/70 md:flex-row md:items-center md:justify-between">
           <nav aria-label="Informations légales" className="flex flex-wrap gap-x-5 gap-y-2">
             <Link className="link-underline" href="/mentions-legales">Mentions légales</Link>

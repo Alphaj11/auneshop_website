@@ -30,7 +30,7 @@ test.afterAll(async () => {
 });
 
 async function adminLogin(page: Page) {
-  await page.goto("/admin/connexion");
+  await page.goto("/admin/connexion", { waitUntil: "networkidle" });
   await page.getByLabel("Email").fill(ADMIN_EMAIL);
   await page.getByLabel("Mot de passe").fill(ADMIN_PASSWORD);
   await page.getByRole("button", { name: /se connecter/i }).click();
@@ -253,7 +253,7 @@ test("12. Administration protégée côté serveur", async ({ page, request }) =
   expect(anon?.status()).toBeLessThan(500);
 
   // Un client connecté n'accède pas à l'administration.
-  await page.goto("/connexion");
+  await page.goto("/connexion", { waitUntil: "networkidle" });
   await page.getByLabel("Email").fill(CUSTOMER_EMAIL);
   await page.getByLabel("Mot de passe").fill(CUSTOMER_PASSWORD);
   await page.getByRole("button", { name: /se connecter/i }).click();

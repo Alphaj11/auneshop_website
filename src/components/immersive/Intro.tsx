@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { garments } from "@/lib/garments";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { Logo } from "@/components/ui/Logo";
 import { useMotionPref } from "@/components/ui/MotionPref";
 
 /**
@@ -28,7 +29,7 @@ type Props = {
   garmentImageUrl?: string;
 };
 
-const COLORS = ["#B5562F", "#2F4A3A", "#1E1B17", "#C2923A", "#9A4523", "#6F675D", "#E3B9B3"];
+const COLORS = ["#3E0913", "#6B1F2C", "#2A0B12", "#C9B79C", "#8C4A55", "#E8DCC8", "#B08A8F"];
 const STAGES = ["La matière", "L'assemblage", "La naissance", ""];
 
 type Fiber = {
@@ -201,12 +202,12 @@ export function Intro({ storeName, line1, line2, version, mobileMode, garmentIma
         ctx.translate(ox, oy);
         ctx.scale(scale, scale);
         ctx.globalAlpha = birth;
-        ctx.fillStyle = "#B5562F";
+        ctx.fillStyle = "#3E0913";
         ctx.fill(outline);
         // Trame
         ctx.clip(outline);
         ctx.globalAlpha = birth * 0.18;
-        ctx.strokeStyle = "#1E1B17";
+        ctx.strokeStyle = "#2A0B12";
         ctx.lineWidth = 0.6;
         for (let y = cy0; y < cy0 + ch; y += 5) {
           ctx.beginPath();
@@ -232,7 +233,7 @@ export function Intro({ storeName, line1, line2, version, mobileMode, garmentIma
         ctx.translate(ox, oy);
         ctx.scale(scale, scale);
         ctx.setLineDash([total * trace, total]);
-        ctx.strokeStyle = "#1E1B17";
+        ctx.strokeStyle = "#2A0B12";
         ctx.globalAlpha = 0.8 * (1 - birth);
         ctx.lineWidth = 1.4 / scale;
         ctx.stroke(outline);
@@ -301,12 +302,12 @@ export function Intro({ storeName, line1, line2, version, mobileMode, garmentIma
         className="pointer-events-none absolute inset-x-0 bottom-[7vh] flex flex-col items-center gap-4 text-center transition-all duration-1000 ease-[var(--ease-cloth)]"
         style={{ opacity: phase >= 3 ? 1 : 0, transform: `translateY(${phase >= 3 ? 0 : 20}px)` }}
       >
-        <p
-          className="font-display text-5xl transition-[letter-spacing] duration-[1400ms] ease-[var(--ease-cloth)] md:text-7xl"
-          style={{ letterSpacing: phase >= 3 ? "0.32em" : "0.05em", paddingLeft: phase >= 3 ? "0.32em" : "0.05em" }}
+        <div
+          className="transition-transform duration-[1400ms] ease-[var(--ease-cloth)]"
+          style={{ transform: `scale(${phase >= 3 ? 1 : 0.92})` }}
         >
-          {storeName.toUpperCase()}
-        </p>
+          <Logo className="h-14 w-auto md:h-20" alt={storeName} />
+        </div>
         <p className="font-display text-lg italic text-ink-soft md:text-xl">
           {line1}
           <br />

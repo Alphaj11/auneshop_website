@@ -1,3 +1,4 @@
+import { Logo } from "@/components/ui/Logo";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/account/AuthForms";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -11,7 +12,7 @@ export default async function AdminLogin() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-ink px-5">
       <div className="w-full max-w-sm rounded-lg bg-paper p-8">
-        <p className="font-display text-2xl tracking-[0.3em]">AUNE</p>
+        <Logo className="h-9 w-auto" alt="Aune" />
         <h1 className="mt-6 text-lg">Administration</h1>
         <p className="mb-6 mt-1 text-sm text-ink-soft">Accès réservé à l&apos;équipe.</p>
         <LoginForm area="admin" />

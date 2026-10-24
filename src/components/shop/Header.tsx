@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -88,8 +89,8 @@ export function Header({
             </nav>
           </div>
 
-          <Link href="/" className="font-display text-2xl tracking-[0.32em] md:text-[1.7rem]" aria-label={`${storeName}, accueil`}>
-            {storeName.toUpperCase()}
+          <Link href="/" className="block" aria-label={`${storeName}, accueil`}>
+            <Logo className="h-7 w-auto md:h-9" />
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-1 md:gap-3">
@@ -196,7 +197,7 @@ export function Header({
             onKeyDown={(e) => e.key === "Escape" && setMobile(false)}
           >
             <div className="flex h-16 items-center justify-between">
-              <span className="font-display text-2xl tracking-[0.32em]">{storeName.toUpperCase()}</span>
+              <Logo className="h-7 w-auto" alt={storeName} />
               <button className="-mr-2 p-2" onClick={() => setMobile(false)} aria-label="Fermer le menu" autoFocus>
                 <svg width="22" height="22" viewBox="0 0 20 20" aria-hidden>
                   <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.4" />
