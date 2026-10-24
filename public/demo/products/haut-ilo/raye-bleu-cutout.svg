@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 130 280 430">
+<defs><filter id="ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-opacity=".18"/></filter></defs>
+<g filter="url(#ds)">
+<defs>
+<pattern id="c28-weave" width="6" height="6" patternUnits="userSpaceOnUse">
+<path d="M0 1.5H6M0 4.5H6" stroke="rgba(0,0,0,.07)" stroke-width="1"/>
+<path d="M1.5 0V6M4.5 0V6" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+</pattern>
+<pattern id="c28-stripes" width="400" height="22" patternUnits="userSpaceOnUse"><rect width="400" height="22" fill="#EDE6D6"/><rect y="0" width="400" height="8" fill="#34436A"/></pattern>
+<linearGradient id="c28-shade" x1="0" x2="1">
+<stop offset="0" stop-color="#000" stop-opacity=".22"/>
+<stop offset=".3" stop-color="#000" stop-opacity="0"/>
+<stop offset=".55" stop-color="#fff" stop-opacity=".09"/>
+<stop offset="1" stop-color="#000" stop-opacity=".26"/>
+</linearGradient>
+<clipPath id="c28-clip"><path d="M200 176 C208 176 218 172 222 162 C244 168 268 176 284 186 C302 200 310 300 313 392 C316 460 319 510 322 538 C314 543 304 545 296 544 C292 470 288 340 280 252 C282 330 282 410 284 486 C254 492 226 494 200 494 C174 494 146 492 116 486 C118 410 118 330 120 252 C112 340 108 470 104 544 C96 545 86 543 78 538 C81 510 84 460 87 392 C90 300 98 200 116 186 C132 176 156 168 178 162 C182 172 192 176 200 176 Z"/></clipPath>
+</defs>
+<g class="garment">
+<path d="M200 176 C208 176 218 172 222 162 C244 168 268 176 284 186 C302 200 310 300 313 392 C316 460 319 510 322 538 C314 543 304 545 296 544 C292 470 288 340 280 252 C282 330 282 410 284 486 C254 492 226 494 200 494 C174 494 146 492 116 486 C118 410 118 330 120 252 C112 340 108 470 104 544 C96 545 86 543 78 538 C81 510 84 460 87 392 C90 300 98 200 116 186 C132 176 156 168 178 162 C182 172 192 176 200 176 Z" fill="url(#c28-stripes)"/>
+<g clip-path="url(#c28-clip)">
+<rect x="0" y="0" width="400" height="1000" fill="url(#c28-weave)"/>
+<rect x="0" y="0" width="400" height="1000" fill="url(#c28-shade)"/>
+</g>
+<path d="M178 162 C184 150 216 150 222 162 L222 176 C214 182 186 182 178 176 Z" fill="#d1cabc"/>
+<path d="M200 182 L200 300" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M296 544 C292 470 288 340 280 252" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M104 544 C108 470 112 340 120 252" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M240 320 C244 380 240 440 246 486" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M158 340 C156 400 160 450 156 488" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="200" cy="206" r="4.2" fill="#f2ece0" stroke="rgba(40,30,20,.22)" stroke-width="1"/><circle cx="200" cy="240" r="4.2" fill="#f2ece0" stroke="rgba(40,30,20,.22)" stroke-width="1"/><circle cx="200" cy="274" r="4.2" fill="#f2ece0" stroke="rgba(40,30,20,.22)" stroke-width="1"/>
+</g></g>
+</svg>

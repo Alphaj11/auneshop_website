@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="252 510 140 210">
+<defs><filter id="ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-opacity=".18"/></filter></defs>
+<g filter="url(#ds)">
+<defs>
+<pattern id="c115-weave" width="6" height="6" patternUnits="userSpaceOnUse">
+<path d="M0 1.5H6M0 4.5H6" stroke="rgba(0,0,0,.07)" stroke-width="1"/>
+<path d="M1.5 0V6M4.5 0V6" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+</pattern>
+<linearGradient id="c115-shade" x1="0" x2="1">
+<stop offset="0" stop-color="#000" stop-opacity=".22"/>
+<stop offset=".3" stop-color="#000" stop-opacity="0"/>
+<stop offset=".55" stop-color="#fff" stop-opacity=".09"/>
+<stop offset="1" stop-color="#000" stop-opacity=".26"/>
+</linearGradient>
+<clipPath id="c115-clip"><path d="M280 586 L364 586 L372 700 L272 700 Z"/></clipPath>
+</defs>
+<g class="garment">
+<path d="M280 586 L364 586 L372 700 L272 700 Z" fill="#EDE6D6"/>
+<g clip-path="url(#c115-clip)">
+<rect x="0" y="0" width="400" height="1000" fill="url(#c115-weave)"/>
+<rect x="0" y="0" width="400" height="1000" fill="url(#c115-shade)"/>
+</g>
+<path d="M292 588 C292 540 306 526 312 526 C320 526 334 540 334 588 L326 588 C326 548 318 536 312 536 C306 536 300 548 300 588 Z" fill="#d1cabc"/>
+<path d="M280 606 L364 606" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M300 640 L344 640" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/>
+</g></g>
+</svg>
