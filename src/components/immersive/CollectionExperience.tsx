@@ -38,7 +38,10 @@ export function CollectionExperience({
 
   const choose = (v: View) => {
     setChosen(v);
-    router.replace(`${pathname}?vue=${v === "grid" ? "grille" : "immersion"}`, { scroll: false });
+    // Conserve les autres paramètres (ex. ?rayon=femme).
+    const qs = new URLSearchParams(window.location.search);
+    qs.set("vue", v === "grid" ? "grille" : "immersion");
+    router.replace(`${pathname}?${qs}`, { scroll: false });
   };
 
   const tabs = immersiveAllowed && (

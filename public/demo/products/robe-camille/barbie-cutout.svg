@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 140 280 640">
+<defs><filter id="ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-opacity=".18"/></filter></defs>
+<g filter="url(#ds)">
+<defs>
+<pattern id="c7-weave" width="6" height="6" patternUnits="userSpaceOnUse">
+<path d="M0 1.5H6M0 4.5H6" stroke="rgba(0,0,0,.07)" stroke-width="1"/>
+<path d="M1.5 0V6M4.5 0V6" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+</pattern>
+<linearGradient id="c7-shade" x1="0" x2="1">
+<stop offset="0" stop-color="#000" stop-opacity=".22"/>
+<stop offset=".3" stop-color="#000" stop-opacity="0"/>
+<stop offset=".55" stop-color="#fff" stop-opacity=".09"/>
+<stop offset="1" stop-color="#000" stop-opacity=".26"/>
+</linearGradient>
+<clipPath id="c7-clip"><path d="M200 214 C210 204 214 176 215 156 C219 154 222 156 224 160 C230 190 252 214 270 240 C266 300 254 350 252 392 C272 470 302 600 322 742 C282 756 240 760 200 760 C160 760 118 756 78 742 C98 600 128 470 148 392 C146 350 134 300 130 240 C148 214 170 190 176 160 C178 156 181 154 185 156 C186 176 190 204 200 214 Z"/></clipPath>
+</defs>
+<g class="garment">
+<path d="M200 214 C210 204 214 176 215 156 C219 154 222 156 224 160 C230 190 252 214 270 240 C266 300 254 350 252 392 C272 470 302 600 322 742 C282 756 240 760 200 760 C160 760 118 756 78 742 C98 600 128 470 148 392 C146 350 134 300 130 240 C148 214 170 190 176 160 C178 156 181 154 185 156 C186 176 190 204 200 214 Z" fill="#D9558F"/>
+<g clip-path="url(#c7-clip)">
+<rect x="0" y="0" width="400" height="1000" fill="url(#c7-weave)"/>
+<rect x="0" y="0" width="400" height="1000" fill="url(#c7-shade)"/>
+</g>
+<path d="M148 392 C180 400 220 400 252 392 L254 404 C220 412 180 412 146 404 Z" fill="#bf4b7e"/>
+<path d="M186 300 C192 296 208 296 214 300" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M228 410 C240 520 252 640 262 752" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M200 412 L200 760" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M172 410 C160 520 148 640 138 752" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M246 410 C268 520 290 640 304 746" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M154 410 C132 520 110 640 96 746" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/>
+</g></g>
+</svg>

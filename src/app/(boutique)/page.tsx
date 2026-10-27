@@ -54,7 +54,40 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
   const c = s.content;
   switch (s.type) {
     case "hero":
-      return <Hero key={s.id} title={c.title} subtitle={c.subtitle} imageUrl={c.imageUrl} ctaLabel={c.ctaLabel} ctaHref={c.ctaHref} />;
+      return (
+        <Hero
+          key={s.id}
+          slides={[
+            {
+              label: "Femme",
+              title: "Des pièces qui se nouent, se croisent, se retournent.",
+              subtitle: "Robes portefeuille, blouses fluides, pantalons amples : le vestiaire femme en coton tissé artisanalement.",
+              imageUrl: c.imageUrl || "/demo/photos/hero.jpg",
+              focus: "60% 20%",
+              ctaLabel: "Découvrir la femme",
+              ctaHref: "/boutique?rayon=femme",
+            },
+            {
+              label: "Homme",
+              title: "Des lignes simples, amples et structurées.",
+              subtitle: "Chemises à col mao, vestes de travail, t-shirts tissés : le vestiaire homme.",
+              imageUrl: "/demo/photos/bastien.jpg",
+              focus: "60% 25%",
+              ctaLabel: "Découvrir l'homme",
+              ctaHref: "/boutique?rayon=homme",
+            },
+            {
+              label: "Notre histoire",
+              title: c.title,
+              subtitle: c.subtitle,
+              imageUrl: "/demo/atelier/fils.jpg",
+              focus: "55% center",
+              ctaLabel: "Entrer dans l'atelier",
+              ctaHref: "/atelier",
+            },
+          ]}
+        />
+      );
     case "promo_banner":
       return <PromoBanner key={s.id} text={c.title} href={c.ctaHref} />;
     case "featured_collection": {

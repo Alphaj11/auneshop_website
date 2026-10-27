@@ -1,19 +1,36 @@
 @import "tailwindcss";
 
+/* Garamond de titrage (variable 300–700), auto-hébergée dans public/fonts. */
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-normal.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-italic.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 /*
  * Identité Aune — couleurs tirées des teintes de tissu de la boutique actuelle.
  * Pour ajuster la charte, modifiez uniquement ces variables.
  */
 :root {
-  --paper: #f4efe6;
-  --paper-2: #ebe3d6;
-  --paper-3: #e0d6c6;
-  --ink: #2a0b12; /* bordeaux presque noir, dérivé du logo */
-  --ink-soft: #5b544b;
-  --ink-mute: #6f675d;
-  --line: #d8cfc1;
-  --terre: #3e0913; /* bordeaux du logo */
-  --terre-ink: #3e0913; /* version texte, contraste AA sur papier */
+  /* Sable profond plutôt que crème : plus de matière, plus de contraste. */
+  --paper: #e6dac7;
+  --paper-2: #d9cab2;
+  --paper-3: #c8b597;
+  --ink: #3e0812; /* bordeaux de la marque */
+  --ink-soft: #4a3a31;
+  --ink-mute: #594a3f;
+  --line: #bfac8f;
+  --terre: #5a1220; /* bordeaux éclairci : survol des boutons sur fond bordeaux */
+  --terre-ink: #3e0812; /* version texte, contraste AA sur papier */
   --sapin: #2f4a3a;
   --vanille: #e3cb86;
   --rose: #e3b9b3;
@@ -37,7 +54,7 @@
   --color-rose: var(--rose);
   --color-danger: var(--danger);
   --color-success: var(--success);
-  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ease-cloth: var(--ease-cloth);
 }
@@ -65,7 +82,7 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 60;
-  opacity: 0.05;
+  opacity: 0.07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -76,27 +93,35 @@ body {
 
 .display-xl {
   font-family: var(--font-display);
-  font-weight: 340;
-  font-size: clamp(2.6rem, 7vw, 6.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-weight: 300;
+  font-size: clamp(3rem, 7.6vw, 7.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.012em;
 }
 .display-lg {
   font-family: var(--font-display);
-  font-weight: 360;
-  font-size: clamp(2rem, 4.6vw, 4rem);
-  line-height: 1;
-  letter-spacing: -0.015em;
+  font-weight: 400;
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
 }
 .display-md {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 2.8vw, 2.5rem);
   line-height: 1.1;
 }
+/* L'italique de la Garamond porte les mots-clés des titres. */
+.display-xl em,
+.display-lg em,
+.display-md em {
+  font-style: italic;
+  font-weight: inherit;
+}
 .eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -110,6 +135,116 @@ body {
 ::selection {
   background: var(--terre);
   color: var(--paper);
+}
+
+/* Titre d'étape de l'introduction : apparaît en se dépliant */
+.intro-stage {
+  animation: intro-stage 0.9s var(--ease-cloth) both;
+}
+@keyframes intro-stage {
+  from {
+    opacity: 0;
+    letter-spacing: 0.5em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.22em;
+  }
+}
+
+/* Intro déjà vue dans cet onglet : jamais affichée, même un instant. */
+html[data-intro-vue="1"] [data-testid="intro"] {
+  display: none;
+}
+
+/* Bouton « Retour » : le fil se dessine, puis la pointe se noue */
+.back-thread path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.back-thread {
+  transition: transform 0.5s var(--ease-cloth);
+}
+.back-wave {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: back-draw 0.9s var(--ease-cloth) 0.15s forwards;
+}
+.back-head {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: back-draw 0.45s var(--ease-cloth) 0.85s forwards;
+}
+.back-knot {
+  fill: currentColor;
+  opacity: 0;
+  animation: back-fade 0.3s ease 0.1s forwards;
+}
+.back-btn:hover .back-thread,
+.back-btn:focus-visible .back-thread {
+  transform: translateX(-5px);
+}
+/* Au survol : le fil file vers l'arrière, disparaît, puis se retisse. */
+.back-btn:hover .back-wave,
+.back-btn:focus-visible .back-wave {
+  animation: back-pull 0.9s var(--ease-cloth) forwards;
+}
+.back-btn:hover .back-head,
+.back-btn:focus-visible .back-head {
+  animation: back-redraw-head 0.9s var(--ease-cloth) forwards;
+}
+@keyframes back-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes back-fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes back-pull {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  45% {
+    stroke-dashoffset: -60;
+  }
+  46% {
+    stroke-dashoffset: 60;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes back-redraw-head {
+  0%,
+  55% {
+    stroke-dashoffset: 20;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Images secondaires en orbite (mode immersif) */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fil de progression du carrousel d'accueil */
+@keyframes hero-thread {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* Lien souligné animé */

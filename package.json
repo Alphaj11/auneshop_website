@@ -15,6 +15,7 @@
     "db:init": "tsx scripts/init.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/seed.ts --reset",
+    "demo:photos": "tsx scripts/download-demo-photos.ts",
     "demo:assets": "tsx scripts/generate-demo-assets.ts",
     "admin:create": "tsx scripts/create-admin.ts"
   },

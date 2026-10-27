@@ -2,11 +2,14 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Intro, introState } from "./Intro";
+import { Intro, introSeenScript, introState } from "./Intro";
 
 type Props = React.ComponentProps<typeof Intro>;
 
-/** L'introduction n'est jouée qu'à l'arrivée sur la page d'accueil (ou avec ?intro=1). */
+/**
+ * L'introduction est jouée à chaque ouverture du site sur la page d'accueil
+ * (une fois par onglet), ou à la demande avec ?intro=1.
+ */
 function Gate(props: Props) {
   const pathname = usePathname();
   const params = useSearchParams();
@@ -17,8 +20,12 @@ function Gate(props: Props) {
 
 export function IntroGate(props: Props) {
   return (
-    <Suspense fallback={null}>
-      <Gate {...props} />
-    </Suspense>
+    <>
+      {/* Avant le premier affichage : masque l'intro si elle a déjà été vue dans cet onglet. */}
+      <script dangerouslySetInnerHTML={{ __html: introSeenScript(props.version) }} />
+      <Suspense fallback={null}>
+        <Gate {...props} />
+      </Suspense>
+    </>
   );
 }

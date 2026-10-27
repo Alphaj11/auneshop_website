@@ -36,7 +36,7 @@ function escapeHtml(s: string) {
 
 function wrapHtml(text: string) {
   const body = escapeHtml(text).replace(/\n/g, "<br>");
-  return `<div style="font-family:Georgia,serif;background:#F4EFE6;padding:32px;color:#2A0B12"><div style="max-width:560px;margin:auto;background:#fff;border-radius:4px;overflow:hidden"><div style="background:#3E0913;padding:20px 32px"><img src="${appUrl("/brand/logo-blanc.png")}" alt="Aune" width="110" style="display:block;height:auto"></div><div style="padding:32px"><p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6">${body}</p></div></div></div>`;
+  return `<div style="font-family:Georgia,serif;background:#E6DAC7;padding:32px;color:#3E0812"><div style="max-width:560px;margin:auto;background:#fff;border-radius:4px;overflow:hidden"><div style="background:#3E0812;padding:20px 32px"><img src="${appUrl("/brand/logo-blanc.png")}" alt="Aune" width="110" style="display:block;height:auto"></div><div style="padding:32px"><p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6">${body}</p></div></div></div>`;
 }
 
 export function appUrl(path = "") {

@@ -50,7 +50,7 @@ let orderNumber = "";
 
 test("1-4. Collection immersive : sélection, changement de tenue, ajout au panier depuis la scène", async () => {
   const page = shop;
-  await page.goto("/collections/terre-et-fil", { waitUntil: "networkidle" });
+  await page.goto("/collections/phir", { waitUntil: "networkidle" });
   const scene = page.getByRole("region", { name: "Collection en vue immersive" });
   await expect(scene).toBeVisible();
   const items = scene.getByRole("button", { name: /€/ });
@@ -77,8 +77,8 @@ test("1-4. Collection immersive : sélection, changement de tenue, ajout au pani
 
 test("3. Fiche produit : variantes, stock, ajout au panier", async () => {
   const page = shop;
-  await page.goto("/produits/robe-ama", { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Ama");
+  await page.goto("/produits/haut-malo", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Malo");
   await expect(page.getByText("Exemple").first()).toBeVisible();
   await page.getByRole("radiogroup", { name: "Taille" }).getByRole("radio").and(page.locator(":not([disabled])")).first().click();
   await page.getByTestId("add-to-cart").click();
@@ -210,7 +210,7 @@ test("8. Produit : création, modification, archivage", async ({ page }) => {
 
 test("9. Collection : ajout d'un produit visible publiquement", async ({ page }) => {
   await adminLogin(page);
-  const [c] = await sql`select id from collections where slug = 'les-essentiels'`;
+  const [c] = await sql`select id from collections where slug = 'aadmi'`;
   const [candidate] = await sql`select p.id, p.name from products p where p.status = 'active'
     and not exists (select 1 from collection_products cp where cp.product_id = p.id and cp.collection_id = ${c.id}) limit 1`;
   await page.goto(`/admin/collections/${c.id}`);
@@ -218,7 +218,7 @@ test("9. Collection : ajout d'un produit visible publiquement", async ({ page })
   await adder.click();
   await page.getByRole("button", { name: "Enregistrer l'ordre" }).click();
   await expect(page.getByText(/produit\(s\) dans la collection/)).toBeVisible();
-  await page.goto("/collections/les-essentiels?vue=grille");
+  await page.goto("/collections/aadmi?vue=grille");
   await expect(page.getByText(candidate.name).first()).toBeVisible();
 });
 
@@ -274,9 +274,9 @@ test("13. Mobile : grille accessible, aucune erreur", async ({ browser }) => {
   const page = await ctx.newPage();
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/collections/terre-et-fil?vue=grille");
+  await page.goto("/collections/phir?vue=grille");
   await expect(page.getByRole("tab", { name: "Grille" })).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("link", { name: /Ama/ }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /Léa/ }).first()).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
   expect(errors).toEqual([]);

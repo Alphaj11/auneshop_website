@@ -22,13 +22,12 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
     listCollections(),
     cookies(),
   ]);
-  const introSeen = jar.get("aune_intro")?.value === String(settings.intro.version);
   return (
     <MotionPrefProvider initialOff={jar.get("aune_motion")?.value === "off"} features={settings.experience}>
       <ToastProvider>
         <CartProvider initial={cart}>
           <div className="paper-grain">
-            {settings.intro.enabled && !introSeen && (
+            {settings.intro.enabled && (
               <IntroGate
                 storeName={settings.store.name}
                 line1={settings.intro.line1}
