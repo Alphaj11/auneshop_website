@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { useMotionPref } from "@/components/ui/MotionPref";
 import { ArrowIcon } from "@/components/shop/Icons";
+import { ThreadShadow } from "./ThreadShadow";
 
 export type HeroSlide = {
   /** Libellé court : onglet du carrousel et surtitre. */
@@ -84,6 +85,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
           </motion.div>
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-r from-paper/90 via-paper/45 to-transparent md:from-paper/80" />
+        <ThreadShadow />
         <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-paper/90 via-paper/50 to-transparent md:h-1/3 md:from-paper/70 md:via-transparent" />
       </motion.div>
 

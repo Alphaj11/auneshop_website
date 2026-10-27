@@ -237,6 +237,150 @@ html[data-intro-vue="1"] [data-testid="intro"] {
   }
 }
 
+/* -------------------------------------------------------------------------
+ * L'atelier : « Chaque fil a son histoire » (scène pilotée par le scroll).
+ * ---------------------------------------------------------------------- */
+.story-track {
+  position: relative;
+}
+.story-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.story-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.story-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(20, 8, 6, 0.28), rgba(20, 8, 6, 0.08) 70%, transparent);
+}
+.story-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.story-block {
+  position: absolute;
+  translate: 0 -50%;
+  color: var(--paper);
+  text-shadow: 0 1px 18px rgba(20, 8, 6, 0.45);
+  pointer-events: auto;
+}
+.story-block--center {
+  left: 50%;
+  translate: -50% -50%;
+  width: min(92vw, 56rem);
+  text-align: center;
+}
+.story-block--left,
+.story-block--right {
+  width: min(86vw, 26rem);
+}
+.story-block--left {
+  left: max(1.25rem, 8vw);
+}
+.story-block--right {
+  right: max(1.25rem, 8vw);
+  text-align: right;
+}
+.story-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.story-title-xl {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 11vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.story-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.story-text {
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1.6;
+}
+.story-editorial {
+  position: relative;
+  padding: 8rem 0 4rem;
+  background: var(--paper);
+}
+.story-static-media {
+  height: 70svh;
+}
+/* Mobile : une colonne, titres centrés, blocs en miroir recentrés. */
+@media (max-width: 767px) {
+  .story-block--left,
+  .story-block--right {
+    left: 50%;
+    right: auto;
+    translate: -50% -50%;
+    width: min(88vw, 24rem);
+    text-align: center;
+  }
+}
+
+/* Ombre de fil qui trace le logo sur le carrousel : floue, en produit, discrète. */
+.thread-shadow {
+  overflow: visible;
+  mix-blend-mode: multiply;
+  filter: blur(2.2px);
+  opacity: 0;
+  animation: thread-cycle linear forwards;
+}
+.thread-shadow path {
+  fill: none;
+  stroke: rgba(40, 18, 10, 0.85);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation-name: thread-draw;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes thread-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes thread-cycle {
+  0% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Fil de progression du carrousel d'accueil */
 @keyframes hero-thread {
   from {
