@@ -5,6 +5,7 @@ import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { BackButton } from "./BackButton";
 import { useCart } from "./CartProvider";
 import { BagIcon, HeartIcon, MenuIcon, SearchIcon, UserIcon } from "./Icons";
 
@@ -63,11 +64,12 @@ export function Header({
         onMouseLeave={() => setMega(false)}
       >
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 md:h-20 md:px-10">
-          <div className="flex flex-1 items-center gap-8">
-            <button className="-ml-2 p-2 md:hidden" aria-label="Ouvrir le menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
+          <div className="flex flex-1 items-center gap-1 lg:gap-3 xl:gap-8">
+            <button className="-ml-2 p-2 lg:hidden" aria-label="Ouvrir le menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
               <MenuIcon />
             </button>
-            <nav aria-label="Navigation principale" className="hidden items-center gap-7 text-[0.8rem] uppercase tracking-[0.16em] md:flex">
+            <BackButton />
+            <nav aria-label="Navigation principale" className="hidden items-center gap-4 text-[0.72rem] uppercase tracking-[0.12em] lg:flex xl:gap-7 xl:text-[0.8rem] xl:tracking-[0.16em]">
               <button
                 className="link-underline uppercase"
                 aria-expanded={mega}
@@ -90,7 +92,7 @@ export function Header({
           </div>
 
           <Link href="/" className="block" aria-label={`${storeName}, accueil`}>
-            <Logo className="h-7 w-auto md:h-9" />
+            <Logo className="h-6 w-auto sm:h-7 md:h-9" />
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-1 md:gap-3">
@@ -155,7 +157,7 @@ export function Header({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper md:block"
+              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper lg:block"
             >
               <div className="mx-auto grid max-w-[1600px] grid-cols-5 gap-6 px-10 py-8">
                 {collections.slice(0, 4).map((c, i) => (
