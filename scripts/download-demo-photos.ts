@@ -48,6 +48,17 @@ une marque cautionne le produit. Sur le site, les fiches restent marquées « Ex
 | Usage | Fichier (public/demo/photos/) | Sujet | Auteur | Source |
 | --- | --- | --- | --- | --- |
 ${rows}
+
+## Vidéo et image de l'accueil (thème Sage Studio, branche design-alternatif)
+
+| Fichier (public/demo/hero-main/) | Origine | Licence |
+| --- | --- | --- |
+| \`main.mp4\` | Vidéo fournie par lien dans le brief de design (cloudfront.net) | **Inconnue : test local uniquement, interdite en production** |
+| \`frame2.jpg\` | Image extraite de cette vidéo (à 2 s) | Idem |
+| \`poster.jpg\` | \`frame2.jpg\` avec « au·ne » gravé sur la bague (\`scripts/engrave-ring.py\`) | Idem |
+
+Avant toute mise en ligne, remplacer ces trois fichiers par une vidéo et une photo dont la marque
+détient les droits (tournage propre ou banque d'images sous licence commerciale).
 `,
 );
 console.log("Crédits écrits dans docs/CREDITS-PHOTOS.md");

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { BackButton } from "./BackButton";
 import { useCart } from "./CartProvider";
-import { BagIcon, HeartIcon, MenuIcon, SearchIcon, UserIcon } from "./Icons";
+import { BagIcon, MenuIcon, SearchIcon, UserIcon } from "./Icons";
 
 type NavCollection = { slug: string; name: string; tagline: string; coverImageUrl: string | null };
 
@@ -63,67 +63,78 @@ export function Header({
         }`}
         onMouseLeave={() => setMega(false)}
       >
-        <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 md:h-20 md:px-10">
-          <div className="flex flex-1 items-center gap-1 lg:gap-3 xl:gap-8">
-            <button className="-ml-2 p-2 lg:hidden" aria-label="Ouvrir le menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
-              <MenuIcon />
-            </button>
+        {/* Logo à gauche, liens au centre, pastilles à droite (thème Sage Studio). */}
+        <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-4 px-4 md:h-20 md:px-10">
+          <div className="flex flex-1 items-center gap-1 min-[820px]:gap-3">
             <BackButton />
-            <nav aria-label="Navigation principale" className="hidden items-center gap-4 text-[0.72rem] uppercase tracking-[0.12em] lg:flex xl:gap-7 xl:text-[0.8rem] xl:tracking-[0.16em]">
-              <button
-                className="link-underline uppercase"
-                aria-expanded={mega}
-                aria-controls="mega-collections"
-                onClick={() => setMega((m) => !m)}
-                onMouseEnter={() => setMega(true)}
-              >
-                Collections
-              </button>
-              <Link href="/boutique?rayon=femme" className="link-underline" onMouseEnter={() => setMega(false)}>
-                Femme
-              </Link>
-              <Link href="/boutique?rayon=homme" className="link-underline" onMouseEnter={() => setMega(false)}>
-                Homme
-              </Link>
-              <Link href="/atelier" className="link-underline" onMouseEnter={() => setMega(false)}>
-                L&apos;atelier
-              </Link>
-            </nav>
+            <Link href="/" className="block" aria-label={`${storeName}, accueil`} data-hero-head>
+              <Logo className="h-6 w-auto md:h-8" />
+            </Link>
           </div>
 
-          <Link href="/" className="block" aria-label={`${storeName}, accueil`}>
-            <Logo className="h-6 w-auto sm:h-7 md:h-9" />
-          </Link>
+          <nav aria-label="Navigation principale" className="hidden items-center gap-6 text-[0.86rem] text-ink min-[820px]:flex xl:gap-10 xl:text-[0.95rem]">
+            <button
+              className="link-underline"
+              aria-expanded={mega}
+              aria-controls="mega-collections"
+              onClick={() => setMega((m) => !m)}
+              onMouseEnter={() => setMega(true)}
+              data-hero-head
+            >
+              Collections
+            </button>
+            <Link href="/boutique?rayon=femme" className="link-underline" onMouseEnter={() => setMega(false)} data-hero-head>
+              Femme
+            </Link>
+            <Link href="/boutique?rayon=homme" className="link-underline" onMouseEnter={() => setMega(false)} data-hero-head>
+              Homme
+            </Link>
+            <Link href="/atelier" className="link-underline" onMouseEnter={() => setMega(false)} data-hero-head>
+              L&apos;atelier
+            </Link>
+          </nav>
 
-          <div className="flex flex-1 items-center justify-end gap-1 md:gap-3">
+          <div className="flex flex-1 items-center justify-end gap-1 md:gap-2">
             {isStaff && (
-              <Link href="/admin" className="hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest lg:inline-block">
+              <Link href="/admin" className="hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest xl:inline-block">
                 Admin
               </Link>
             )}
-            <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
+            <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)} data-hero-head>
               <SearchIcon />
             </button>
-            <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
-              <HeartIcon />
-            </Link>
-            <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
+            <Link href={signedIn ? "/compte" : "/connexion"} className="hidden p-2 sm:block" aria-label={signedIn ? "Mon compte" : "Se connecter"} data-hero-head>
               <UserIcon />
             </Link>
-            <button className="relative -mr-2 p-2" aria-label={`Ouvrir le panier, ${cart.count} article(s)`} onClick={() => setOpen(true)}>
+            {/* Panier : pastille mousse translucide */}
+            <button
+              className="relative flex h-10 items-center gap-2 rounded-full px-3 text-[0.86rem] text-paper backdrop-blur-md min-[820px]:px-4"
+              style={{ background: "var(--moss-glass)" }}
+              aria-label={`Ouvrir le panier, ${cart.count} article(s)`}
+              onClick={() => setOpen(true)}
+              data-hero-head
+            >
               <motion.span key={lastAddedAt} initial={lastAddedAt ? { rotate: -12, scale: 1.2 } : false} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 12 }} className="block">
                 <BagIcon />
               </motion.span>
+              <span className="hidden min-[820px]:inline">Panier</span>
               {cart.count > 0 && (
-                <motion.span
-                  key={`c${cart.count}`}
-                  initial={{ scale: 0.4 }}
-                  animate={{ scale: 1 }}
-                  className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-terre px-1 text-[10px] font-medium text-paper"
-                >
+                <motion.span key={`c${cart.count}`} initial={{ scale: 0.4 }} animate={{ scale: 1 }} className="text-xs tabular-nums">
                   {cart.count}
                 </motion.span>
               )}
+            </button>
+            <Link href="/boutique" className="hidden h-10 items-center whitespace-nowrap rounded-full bg-ink px-5 text-[0.86rem] text-paper transition-colors hover:bg-terre min-[820px]:flex" data-hero-head>
+              La boutique
+            </Link>
+            {/* Burger rond sous 820 px */}
+            <button
+              className="ml-1 flex h-10 w-10 items-center justify-center rounded-full glass min-[820px]:hidden"
+              aria-label="Ouvrir le menu"
+              aria-expanded={mobile}
+              onClick={() => setMobile(true)}
+            >
+              <MenuIcon />
             </button>
           </div>
         </div>
@@ -157,7 +168,7 @@ export function Header({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper lg:block"
+              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper min-[820px]:block"
             >
               <div className="mx-auto grid max-w-[1600px] grid-cols-5 gap-6 px-10 py-8">
                 {collections.slice(0, 4).map((c, i) => (
@@ -188,7 +199,7 @@ export function Header({
       <AnimatePresence>
         {mobile && (
           <motion.div
-            className="fixed inset-0 z-[75] flex flex-col bg-paper px-6 pb-8"
+            className="glass fixed inset-0 z-[75] flex flex-col px-6 pb-8 !bg-[rgba(203,207,184,0.82)]"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"

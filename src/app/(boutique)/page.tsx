@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CollectionsList } from "@/components/home/CollectionsList";
 import { FeaturedCollection } from "@/components/home/FeaturedCollection";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { Hero } from "@/components/home/Hero";
+import { HeroStudio } from "@/components/home/HeroStudio";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { Selection } from "@/components/home/Selection";
 import { Story } from "@/components/home/Story";
@@ -53,41 +53,21 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 async function renderSection(s: HomeSection, consentText: string, newsletterEnabled: boolean) {
   const c = s.content;
   switch (s.type) {
-    case "hero":
+    case "hero": {
+      // Cartes de verre : uniquement des faits tirés du catalogue (aucun chiffre inventé).
+      const [all, cols] = await Promise.all([listProducts({ limit: 200 }), listCollections()]);
+      const preorders = all.filter((p) => p.isPreorder).length;
       return (
-        <Hero
+        <HeroStudio
           key={s.id}
-          slides={[
-            {
-              label: "Femme",
-              title: "Des pièces qui se nouent, se croisent, se retournent.",
-              subtitle: "Robes portefeuille, blouses fluides, pantalons amples : le vestiaire femme en coton tissé artisanalement.",
-              imageUrl: c.imageUrl || "/demo/photos/hero.jpg",
-              focus: "60% 20%",
-              ctaLabel: "Découvrir la femme",
-              ctaHref: "/boutique?rayon=femme",
-            },
-            {
-              label: "Homme",
-              title: "Des lignes simples, amples et structurées.",
-              subtitle: "Chemises à col mao, vestes de travail, t-shirts tissés : le vestiaire homme.",
-              imageUrl: "/demo/photos/bastien.jpg",
-              focus: "60% 25%",
-              ctaLabel: "Découvrir l'homme",
-              ctaHref: "/boutique?rayon=homme",
-            },
-            {
-              label: "Notre histoire",
-              title: c.title,
-              subtitle: c.subtitle,
-              imageUrl: "/demo/atelier/fils.jpg",
-              focus: "55% center",
-              ctaLabel: "Entrer dans l'atelier",
-              ctaHref: "/atelier",
-            },
+          cards={[
+            { label: "Matière", value: "Coton", sub: "Tissé à la main", gold: true, icon: "thread" },
+            { label: "Précommande", value: String(preorders), sub: "Pièces faites pour vous", gold: true, icon: "calendar" },
+            { label: "Collections", value: String(cols.length), sub: cols.map((x) => x.name).join(" · "), icon: "grid" },
           ]}
         />
       );
+    }
     case "promo_banner":
       return <PromoBanner key={s.id} text={c.title} href={c.ctaHref} />;
     case "featured_collection": {

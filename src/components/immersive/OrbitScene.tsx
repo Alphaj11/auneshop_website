@@ -11,7 +11,7 @@ import { ArrowIcon } from "@/components/shop/Icons";
 
 export type OrbitVariant = { id: string; size: string; color: string; colorHex: string | null; available: boolean; priceCents: number };
 
-const PAPER: [number, number, number] = [230, 218, 199];
+const PAPER: [number, number, number] = [203, 207, 184];
 
 /**
  * Teinte dominante d'une image (moyenne pondérée par la saturation, au centre),
@@ -417,7 +417,7 @@ export function OrbitScene({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-[4px] border border-line bg-paper/90 p-5 shadow-[0_20px_60px_-30px_rgba(30,27,23,.4)] backdrop-blur-md"
+            className="glass rounded-[20px] p-5"
             aria-live="polite"
             data-testid="orbit-panel"
           >

@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = { themeColor: "#e6dac7", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#cbcfb8", width: "device-width", initialScale: 1 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const motion = (await cookies()).get("aune_motion")?.value === "off" ? "off" : "on";
@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     // suppressHydrationWarning : data-intro-vue est posé volontairement avant l'hydratation (IntroGate).
     <html lang="fr" data-motion={motion} suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/fonts/cormorant-garamond-normal.woff2" as="font" type="font/woff2" crossOrigin="" />
+        <link rel="preload" href="/fonts/outfit.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>
       <body className="min-h-dvh">{children}</body>
     </html>

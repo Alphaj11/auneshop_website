@@ -62,8 +62,8 @@ const DOT: P[] = Array.from({ length: 34 }, (_, i) => {
   return [299 + Math.cos(a) * r, 87 + Math.sin(a) * r] as P;
 });
 
-const BEIGE = "#E6DAC7";
-const THREAD: RGB = hex("#3E0812");
+const BEIGE = "#CBCFB8";
+const THREAD: RGB = hex("#1E3227");
 const W_LOGO = 605;
 const H_LOGO = 173;
 const STROKE = 21;
@@ -141,6 +141,7 @@ export function Intro({ storeName, line1, line2, version, mobileMode }: Props) {
     introState.done = true;
     cancelAnimationFrame(raf.current);
     markSeen(version);
+    window.dispatchEvent(new Event("aune:intro-done")); // l'accueil lance alors son entrée
     setPhase(2);
     setTimeout(() => setVisible(false), 900);
   }, [version]);
