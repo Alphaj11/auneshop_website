@@ -9,7 +9,7 @@ export function AuthShell({ title, subtitle, children, aside }: { title: string;
       </div>
       <div className="relative hidden overflow-hidden rounded-[3px] bg-paper-2 lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/demo/story/tissage.svg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src="/demo/atelier/metier-a-tisser.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
       </div>
     </div>
   );
