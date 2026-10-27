@@ -10,7 +10,7 @@
  * par les vraies photographies de la marque.
  */
 
-export type GarmentType = "tshirt" | "top" | "shirt" | "jacket" | "dress" | "trousers" | "skirt" | "tote";
+export type GarmentType = "tshirt" | "top" | "cami" | "shirt" | "jacket" | "dress" | "trousers" | "skirt" | "tote";
 
 type Pt = [number, number];
 type Seg = [Pt, Pt, Pt]; // c1, c2, fin
@@ -50,52 +50,57 @@ function mirrorPath(start: Pt, segs: Seg[], close = false) {
 // Mannequin
 // ---------------------------------------------------------------------------
 
+/*
+ * Mannequin de vitrine : silhouette élancée, tête ovoïde sans visage,
+ * articulations visibles (épaules, poignets, hanches), posé sur un socle chromé.
+ * Une main se pose sur la hanche quand le vêtement n'a pas de manches.
+ */
+const armStraight: Seg[] = [
+  [[282, 206], [288, 240], [290, 300]],
+  [[291, 330], [292, 360], [292, 380]],
+  [[294, 420], [297, 470], [300, 518]],
+  [[304, 536], [309, 566], [303, 588]],
+  [[300, 598], [292, 598], [290, 588]],
+  [[287, 568], [285, 540], [284, 520]],
+  [[282, 470], [278, 420], [274, 380]],
+  [[271, 340], [268, 300], [264, 252]],
+  [[262, 230], [262, 210], [266, 196]],
+];
+
 export const mannequin = {
-  head: "M200 44 C226 44 240 66 240 96 C240 128 222 150 200 150 C178 150 160 128 160 96 C160 66 174 44 200 44 Z",
+  head: "M200 46 C225 46 238 68 238 98 C238 124 226 143 211 151 C207 153 203 154 200 154 C197 154 193 153 189 151 C174 143 162 124 162 98 C162 68 175 46 200 46 Z",
   body: symmetric(
     [200, 140],
     [
-      [[208, 140], [214, 142], [215, 150]],
-      [[216, 158], [216, 164], [218, 170]],
-      [[236, 176], [262, 178], [280, 190]],
-      [[292, 200], [292, 222], [284, 244]],
-      [[276, 280], [268, 330], [254, 382]],
-      [[262, 410], [274, 440], [274, 470]],
-      [[276, 560], [262, 680], [254, 760]],
-      [[250, 840], [240, 900], [238, 948]],
-      [[244, 962], [262, 976], [258, 986]],
-      [[240, 992], [222, 990], [214, 984]],
-      [[212, 960], [212, 900], [210, 840]],
-      [[208, 720], [206, 600], [200, 512]],
+      [[208, 140], [213, 144], [214, 152]],
+      [[215, 160], [215, 168], [218, 174]],
+      [[230, 179], [250, 185], [262, 191]],
+      [[274, 197], [280, 208], [275, 222]],
+      [[270, 236], [262, 248], [260, 262]],
+      [[262, 290], [258, 320], [246, 350]],
+      [[238, 368], [234, 376], [234, 386]],
+      [[236, 420], [258, 444], [260, 476]],
+      [[262, 520], [254, 600], [244, 680]],
+      [[240, 710], [244, 740], [244, 770]],
+      [[244, 830], [230, 880], [224, 930]],
+      [[224, 950], [232, 966], [226, 976]],
+      [[220, 980], [212, 978], [210, 968]],
+      [[208, 940], [210, 900], [212, 850]],
+      [[214, 800], [214, 740], [212, 700]],
+      [[210, 640], [208, 580], [204, 540]],
+      [[203, 530], [202, 522], [200, 520]],
     ],
   ),
-  armRight: path(
-    [282, 214],
-    [
-      [[298, 240], [304, 320], [306, 392]],
-      [[308, 450], [314, 500], [318, 546]],
-      [[326, 572], [322, 600], [308, 600]],
-      [[298, 598], [296, 576], [298, 552]],
-      [[294, 500], [288, 440], [284, 396]],
-      [[282, 340], [280, 290], [274, 262]],
-    ],
-    true,
-  ),
-  get armLeft() {
-    return mirrorPath(
-      [282, 214],
-      [
-        [[298, 240], [304, 320], [306, 392]],
-        [[308, 450], [314, 500], [318, 546]],
-        [[326, 572], [322, 600], [308, 600]],
-        [[298, 598], [296, 576], [298, 552]],
-        [[294, 500], [288, 440], [284, 396]],
-        [[282, 340], [280, 290], [274, 262]],
-      ],
-      true,
-    );
-  },
+  armRight: path([266, 196], armStraight, true),
+  armLeft: mirrorPath([266, 196], armStraight, true),
+  /** Bras gauche replié, main posée sur la hanche. */
+  armLeftHip:
+    "M134 196 C122 200 110 214 104 240 C98 268 94 300 90 326 C86 340 88 352 96 356 C116 390 136 425 152 446 " +
+    "C160 456 170 458 172 450 C172 440 164 432 156 430 C140 412 122 372 112 342 C116 300 126 262 136 240 C138 224 138 206 134 196 Z",
 };
+
+/** Vêtements sans manches : le mannequin peut poser la main sur la hanche. */
+const SLEEVELESS: GarmentType[] = ["dress", "cami", "skirt", "trousers", "tote"];
 
 // ---------------------------------------------------------------------------
 // Vêtements
@@ -261,6 +266,25 @@ export const garments: Record<GarmentType, GarmentShape> = {
     crop: [60, 140, 280, 640],
     underArms: true,
   },
+  cami: {
+    body: symmetric(
+      [200, 222],
+      [
+        [[210, 212], [214, 184], [215, 160]],
+        [[219, 158], [222, 160], [224, 164]],
+        [[230, 192], [250, 214], [264, 238]],
+        [[262, 320], [262, 410], [266, 486]],
+        [[244, 494], [222, 496], [200, 496]],
+      ],
+    ),
+    lines: [
+      "M184 300 C192 296 208 296 216 300",
+      "M228 330 C232 390 230 440 236 490",
+      "M172 330 C168 390 170 440 164 490",
+    ],
+    crop: [100, 140, 200, 370],
+    underArms: true,
+  },
   trousers: {
     body: symmetric(
       [200, 374],
@@ -357,26 +381,90 @@ export function garmentSvg(type: GarmentType, palette: Palette, idPrefix = `g${u
   </g>`;
 }
 
-/** Mannequin seul (couleur plâtre), avec ou sans vêtement par-dessus. */
-export function mannequinSvg(tone = "#E4DCCF", garment?: { type: GarmentType; palette: Palette; id?: string }): string {
-  const shapeUnder = garment && garments[garment.type].underArms;
-  const g = garment ? garmentSvg(garment.type, garment.palette, garment.id) : "";
-  const mid = shade(tone, -0.08);
-  const dark = shade(tone, -0.2);
+/**
+ * Mannequin de vitrine gris mat sur socle chromé, avec ou sans vêtement.
+ * Le modelé (buste, genoux, visage) est peint en couches floues découpées
+ * dans la silhouette ; les traits fins marquent les articulations démontables.
+ */
+export function mannequinSvg(
+  tone = "#BFC3C5",
+  garment?: { type: GarmentType; palette: Palette; id?: string },
+): string {
+  const p = `mq${garment?.id ?? uid++}`;
+  const hip = !garment || SLEEVELESS.includes(garment.type);
+  const under = !!garment && (hip || garments[garment.type].underArms);
+  const g = garment ? `<g filter="url(#${p}-drop)">${garmentSvg(garment.type, garment.palette, garment.id)}</g>` : "";
+  const light = shade(tone, 0.35);
+  const dark = shade(tone, -0.32);
+  const deep = shade(tone, -0.5);
+  const fill = `url(#${p}-tone)`;
+  const armLeft = hip ? mannequin.armLeftHip : mannequin.armLeft;
+  const seamAt = (o: number) => `stroke="${deep}" stroke-opacity="${o}" stroke-width=".9" fill="none" stroke-linecap="round"`;
+  const seam = seamAt(0.45);
+  const sculpt = (d: string) => `
+    <g clip-path="url(#${p}-clip-body)" filter="url(#${p}-soft)">${d}</g>`;
   return `
   <defs>
-    <linearGradient id="mq-tone" x1="0" x2="1">
+    <linearGradient id="${p}-tone" x1="0" x2="1">
       <stop offset="0" stop-color="${dark}"/>
-      <stop offset=".45" stop-color="${tone}"/>
-      <stop offset="1" stop-color="${mid}"/>
+      <stop offset=".22" stop-color="${tone}"/>
+      <stop offset=".4" stop-color="${light}"/>
+      <stop offset=".62" stop-color="${tone}"/>
+      <stop offset="1" stop-color="${dark}"/>
     </linearGradient>
+    <radialGradient id="${p}-head" cx=".38" cy=".3" r=".8">
+      <stop offset="0" stop-color="${shade(tone, 0.5)}"/>
+      <stop offset=".45" stop-color="${tone}"/>
+      <stop offset="1" stop-color="${deep}"/>
+    </radialGradient>
+    <linearGradient id="${p}-chrome" x1="0" x2="1">
+      <stop offset="0" stop-color="#5d6265"/><stop offset=".22" stop-color="#eef1f2"/>
+      <stop offset=".45" stop-color="#8d9396"/><stop offset=".7" stop-color="#f7f8f8"/>
+      <stop offset="1" stop-color="#565b5e"/>
+    </linearGradient>
+    <filter id="${p}-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="${p}-blur" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="${p}-drop" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1e1b17" flood-opacity=".22"/></filter>
+    <clipPath id="${p}-clip-body"><path d="${mannequin.body}"/></clipPath>
+    <clipPath id="${p}-clip-head"><path d="${mannequin.head}"/></clipPath>
   </defs>
-  <path d="${mannequin.body}" fill="url(#mq-tone)"/>
-  <path d="${mannequin.head}" fill="url(#mq-tone)"/>
-  ${shapeUnder ? g : ""}
-  <path d="${mannequin.armRight}" fill="url(#mq-tone)"/>
-  <path d="${mannequin.armLeft}" fill="url(#mq-tone)"/>
-  ${shapeUnder ? "" : g}`;
+  <ellipse cx="200" cy="986" rx="96" ry="12" fill="#1e1b17" opacity=".22" filter="url(#${p}-blur)"/>
+  <ellipse cx="200" cy="983" rx="74" ry="11" fill="url(#${p}-chrome)"/>
+  <ellipse cx="200" cy="980.5" rx="72" ry="8" fill="#dfe3e4"/>
+  <ellipse cx="186" cy="979.5" rx="40" ry="3.5" fill="#fff" opacity=".7"/>
+  <path d="${mannequin.body}" fill="${fill}"/>
+  ${sculpt(`
+    <ellipse cx="200" cy="168" rx="22" ry="12" fill="${deep}" opacity=".35"/>
+    <ellipse cx="181" cy="282" rx="20" ry="17" fill="${light}" opacity=".7"/>
+    <ellipse cx="219" cy="282" rx="20" ry="17" fill="${light}" opacity=".45"/>
+    <path d="M160 306 C172 318 190 318 198 310 M202 310 C210 318 228 318 240 306" stroke="${deep}" stroke-width="7" opacity=".35" fill="none"/>
+    <ellipse cx="200" cy="420" rx="22" ry="34" fill="${light}" opacity=".35"/>
+    <ellipse cx="200" cy="402" rx="2.5" ry="4" fill="${deep}" opacity=".6"/>
+    <path d="M200 520 L200 980" stroke="${deep}" stroke-width="12" opacity=".5"/>
+    <ellipse cx="226" cy="700" rx="9" ry="16" fill="${light}" opacity=".6"/>
+    <ellipse cx="174" cy="700" rx="9" ry="16" fill="${light}" opacity=".8"/>
+    <path d="M172 760 L178 920 M228 760 L222 920" stroke="${light}" stroke-width="6" opacity=".45"/>
+  `)}
+  <path d="M170 184 C182 190 192 190 198 186 M202 186 C208 190 218 190 230 184" ${seam}/>
+  <path d="M146 470 C170 486 230 486 254 470" ${seam}/>
+  <path d="M190 151 C190 160 192 168 200 170 C208 168 210 160 210 151" ${seamAt(0.25)}/>
+  <path d="${mannequin.head}" fill="url(#${p}-head)"/>
+  <g clip-path="url(#${p}-clip-head)" filter="url(#${p}-soft)">
+    <ellipse cx="187" cy="99" rx="10" ry="6" fill="${deep}" opacity=".35"/>
+    <ellipse cx="213" cy="99" rx="10" ry="6" fill="${deep}" opacity=".45"/>
+    <path d="M201 92 L197 118" stroke="${light}" stroke-width="4" opacity=".9"/>
+    <path d="M204 96 L203 120" stroke="${deep}" stroke-width="3" opacity=".45"/>
+    <ellipse cx="200" cy="138" rx="9" ry="5" fill="${light}" opacity=".7"/>
+    <ellipse cx="226" cy="110" rx="10" ry="30" fill="${deep}" opacity=".4"/>
+  </g>
+  <path d="M195 123 C198 125 202 125 205 123" ${seamAt(0.35)}/>
+  ${under ? g : ""}
+  <path d="${mannequin.armRight}" fill="${fill}"/>
+  <path d="${armLeft}" fill="${fill}"/>
+  <path d="M266 198 C273 214 271 236 263 250 M134 198 C127 214 129 236 137 250" ${seam}/>
+  <path d="M284 520 C290 524 296 524 300 519" ${seam}/>
+  ${hip ? `<path d="M150 444 C153 450 156 452 158 452" ${seam}/>` : `<path d="M116 520 C110 524 104 524 100 519" ${seam}/>`}
+  ${under ? "" : g}`;
 }
 
 // ---------------------------------------------------------------------------

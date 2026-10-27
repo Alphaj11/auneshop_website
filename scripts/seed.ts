@@ -17,6 +17,7 @@ import { defaultSettings } from "../src/lib/settings-schema";
 import type { HomepageSectionContent } from "../src/db/schema";
 import { scriptDb } from "./db";
 import { categories, collections, colorSlug, products } from "./demo-catalog";
+import { pagePhotos, photoUrl, productPhotos } from "./demo-photos";
 
 const args = process.argv.slice(2);
 const reset = args.includes("--reset");
@@ -87,16 +88,14 @@ async function main() {
         isFeatured: !!p.featured,
         isNew: !!p.isNew,
         isPreorder: !!p.preorder,
-        materials: "Exemple : composition à renseigner pour le vrai produit.",
-        care: "Exemple : lavage à 30 °C, séchage à l'air libre, repassage doux.",
-        sizeGuide:
-          p.sizes.length > 1
-            ? "Exemple de guide : XS 34 · S 36 · M 38 · L 40 · XL 42 · XXL 44. Le mannequin mesure 1,75 m et porte une taille S."
-            : "Taille unique.",
+        materials: p.materials,
+        care: "",
+        sizeGuide: p.sizes.length > 1 ? `Tailles disponibles : ${p.sizes.join(" · ")}.` : "Taille unique.",
         craftStory: "",
         weightGrams: p.weightGrams,
         shippingNote: p.preorder ? "Pièce fabriquée à la commande." : "",
         seoDescription: p.short,
+        // Démonstration : les photos sont des visuels d'illustration, le badge « Exemple » reste affiché.
         isDemo: true,
       })
       .returning();
@@ -104,7 +103,28 @@ async function main() {
 
     const images: (typeof schema.productImages.$inferInsert)[] = [];
     let pos = 0;
-    for (const [ci, c] of p.colors.entries()) {
+    const photo = productPhotos[p.slug];
+    // Photo d'illustration (Unsplash) quand elle existe, sinon les visuels générés.
+    if (photo) {
+      images.push({
+        productId: row.id,
+        url: photoUrl(photo),
+        alt: `${p.name} (visuel d'illustration : ${photo.subject}, photo ${photo.author} / Unsplash)`,
+        kind: "gallery",
+        color: p.colors[0].name,
+        position: pos++,
+      });
+      // Deux gros plans recadrés dans la même photo (images secondaires du mode immersif).
+      for (const k of [1, 2])
+        images.push({
+          productId: row.id,
+          url: `/demo/photos/details/${p.slug}-${k}.jpg`,
+          alt: `${p.name}, détail ${k} (visuel d'illustration)`,
+          kind: "gallery",
+          color: p.colors[0].name,
+          position: pos++,
+        });
+    } else for (const [ci, c] of p.colors.entries()) {
       const base = `/demo/products/${p.slug}/${colorSlug(c.name)}`;
       images.push({ productId: row.id, url: `${base}-editorial.svg`, alt: `${p.name}, coloris ${c.name}, porté sur mannequin (visuel de démonstration)`, kind: "gallery", color: c.name, position: pos++ });
       if (ci === 0)
@@ -152,13 +172,13 @@ async function main() {
         name: c.name,
         tagline: c.tagline,
         description: c.description,
-        coverImageUrl: `/demo/collections/${c.slug}.svg`,
+        coverImageUrl: pagePhotos[c.slug] ? photoUrl(pagePhotos[c.slug]) : `/demo/collections/${c.slug}.svg`,
         accentColor: c.accent,
         status: "published",
         immersiveEnabled: c.displayMode === "immersive",
         displayMode: c.displayMode,
         position: i,
-        isDemo: true,
+        isDemo: false,
       })
       .returning();
     collectionIds.set(c.slug, row.id);
@@ -177,7 +197,7 @@ async function main() {
         position: 0,
         title: "Avant d'être une marque, nous sommes un atelier.",
         subtitle: "Des pièces nées de la matière et du geste, fabriquées à la commande.",
-        imageUrl: "/demo/hero.svg",
+        imageUrl: photoUrl(pagePhotos.hero),
         ctaLabel: "Explorer les collections",
         ctaHref: "/collections",
       },
@@ -196,10 +216,10 @@ async function main() {
       content: {
         enabled: true,
         position: 2,
-        title: "Terre & Fil",
+        title: "Phir",
         subtitle: "La collection à la une",
-        body: "Entrez dans la collection : chaque pièce gravite autour du mannequin, choisissez celle qui prend vie.",
-        collectionId: collectionIds.get("terre-et-fil"),
+        body: "Des nouveaux départs et des pièces polyvalentes, en coton tissé artisanalement. Faites tourner les pièces autour de la silhouette et choisissez la vôtre.",
+        collectionId: collectionIds.get("phir"),
         ctaLabel: "Entrer dans la collection",
       },
     },
@@ -214,10 +234,10 @@ async function main() {
         position: 4,
         title: "L'histoire d'un vêtement",
         subtitle: "De la fibre à la pièce que vous portez",
-        body: "Texte d'exemple à remplacer par le récit réel de l'atelier.",
+        body: "Chaque pièce commence par un coton tissé artisanalement, choisi au toucher. Elle est coupée, cousue point par point, puis fabriquée à la commande : rien n'est produit pour dormir dans un stock.",
       },
     },
-    { type: "collections", content: { enabled: true, position: 5, title: "Les collections", subtitle: "Quatre univers à explorer" } },
+    { type: "collections", content: { enabled: true, position: 5, title: "Les collections", subtitle: "Trois vestiaires" } },
     { type: "selection", content: { enabled: true, position: 6, title: "La sélection Aune", subtitle: "Nouveautés", mode: "new" } },
     {
       type: "newsletter",
@@ -259,10 +279,10 @@ async function main() {
 
   // Commandes de TEST (is_test = true)
   const orderSpecs = [
-    { daysAgo: 21, status: "delivered" as const, items: [["robe-ama", 0, 2], ["cabas-trame", 0, 0]] },
-    { daysAgo: 12, status: "shipped" as const, items: [["veste-talo", 0, 2], ["t-shirt-nao", 1, 1]] },
-    { daysAgo: 5, status: "paid" as const, items: [["pantalon-lune", 0, 1], ["haut-ilo", 2, 1]] },
-    { daysAgo: 1, status: "pending_payment" as const, items: [["jupe-doa", 0, 2]] },
+    { daysAgo: 21, status: "delivered" as const, items: [["robe-lea", 0, 2], ["paul", 0, 1]] },
+    { daysAgo: 12, status: "shipped" as const, items: [["veste-nico", 0, 2], ["jessica", 0, 1]] },
+    { daysAgo: 5, status: "paid" as const, items: [["odette-noir", 0, 2], ["yash-estival", 0, 1]] },
+    { daysAgo: 1, status: "pending_payment" as const, items: [["robe-camille", 0, 2]] },
   ];
   for (const spec of orderSpecs) {
     const lines = spec.items.map(([slug, colorIndex, sizeIndex]) => {
@@ -306,7 +326,9 @@ async function main() {
         sku: l.v.sku,
         size: l.size,
         color: l.color.name,
-        imageUrl: `/demo/products/${l.p.slug}/${colorSlug(l.color.name)}-cutout.svg`,
+        imageUrl: productPhotos[l.p.slug]
+          ? photoUrl(productPhotos[l.p.slug])
+          : `/demo/products/${l.p.slug}/${colorSlug(l.color.name)}-cutout.svg`,
         unitPriceCents: l.v.price,
         quantity: l.qty,
         lineTotalCents: l.v.price * l.qty,

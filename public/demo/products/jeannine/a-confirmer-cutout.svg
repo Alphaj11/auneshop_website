@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 140 200 370">
+<defs><filter id="ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-opacity=".18"/></filter></defs>
+<g filter="url(#ds)">
+<defs>
+<pattern id="c25-weave" width="6" height="6" patternUnits="userSpaceOnUse">
+<path d="M0 1.5H6M0 4.5H6" stroke="rgba(0,0,0,.07)" stroke-width="1"/>
+<path d="M1.5 0V6M4.5 0V6" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+</pattern>
+<linearGradient id="c25-shade" x1="0" x2="1">
+<stop offset="0" stop-color="#000" stop-opacity=".22"/>
+<stop offset=".3" stop-color="#000" stop-opacity="0"/>
+<stop offset=".55" stop-color="#fff" stop-opacity=".09"/>
+<stop offset="1" stop-color="#000" stop-opacity=".26"/>
+</linearGradient>
+<clipPath id="c25-clip"><path d="M200 222 C210 212 214 184 215 160 C219 158 222 160 224 164 C230 192 250 214 264 238 C262 320 262 410 266 486 C244 494 222 496 200 496 C178 496 156 494 134 486 C138 410 138 320 136 238 C150 214 170 192 176 164 C178 160 181 158 185 160 C186 184 190 212 200 222 Z"/></clipPath>
+</defs>
+<g class="garment">
+<path d="M200 222 C210 212 214 184 215 160 C219 158 222 160 224 164 C230 192 250 214 264 238 C262 320 262 410 266 486 C244 494 222 496 200 496 C178 496 156 494 134 486 C138 410 138 320 136 238 C150 214 170 192 176 164 C178 160 181 158 185 160 C186 184 190 212 200 222 Z" fill="#D9D2C5"/>
+<g clip-path="url(#c25-clip)">
+<rect x="0" y="0" width="400" height="1000" fill="url(#c25-weave)"/>
+<rect x="0" y="0" width="400" height="1000" fill="url(#c25-shade)"/>
+</g>
+<path d="M184 300 C192 296 208 296 216 300" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M228 330 C232 390 230 440 236 490" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/><path d="M172 330 C168 390 170 440 164 490" fill="none" stroke="rgba(40,30,20,.22)" stroke-width="1.6" stroke-linecap="round"/>
+</g></g>
+</svg>

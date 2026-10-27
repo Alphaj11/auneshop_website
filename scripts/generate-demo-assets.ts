@@ -46,7 +46,7 @@ function editorial(c: DemoColor, type: (typeof products)[number]["type"], backdr
   <rect width="800" height="1000" fill="url(#wall)"/>
   <rect width="800" height="1000" fill="url(#light)"/>
   <ellipse cx="400" cy="955" rx="150" ry="22" fill="url(#shadow)"/>
-  <g transform="translate(220 10) scale(0.9 0.95)">${mannequinSvg("#E7E0D4", { type, palette: palette(c), id })}</g>
+  <g transform="translate(220 10) scale(0.9 0.95)">${mannequinSvg(undefined, { type, palette: palette(c), id })}</g>
   <rect width="800" height="1000" filter="url(#grain)"/>
 </svg>`;
 }
@@ -62,7 +62,7 @@ function cutout(c: DemoColor, type: (typeof products)[number]["type"], id: strin
 
 /** Mannequin portant le vêtement, fond transparent. */
 function worn(c: DemoColor, type: (typeof products)[number]["type"], id: string) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000">${mannequinSvg("#E7E0D4", { type, palette: palette(c), id })}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000">${mannequinSvg(undefined, { type, palette: palette(c), id })}</svg>`;
 }
 
 /** Gros plan sur la trame du tissu. */
@@ -127,7 +127,7 @@ for (const col of collections) {
       const x = [430, 120, 740][i];
       const s = i === 0 ? 0.92 : 0.78;
       const y = i === 0 ? 40 : 150;
-      return `<g transform="translate(${x} ${y}) scale(${s})" opacity="${i === 0 ? 1 : 0.92}">${mannequinSvg("#E7E0D4", {
+      return `<g transform="translate(${x} ${y}) scale(${s})" opacity="${i === 0 ? 1 : 0.92}">${mannequinSvg(undefined, {
         type: p.type,
         palette: palette(p.colors[0]),
         id: `cv${col.slug}${i}`,
@@ -214,13 +214,13 @@ write(
   <path d="M0 780 L1600 760 L1600 1000 L0 1000Z" fill="#C3A988" opacity=".55"/>
   ${Array.from({ length: 14 }, (_, i) => `<path d="M${-100 + i * 40} ${-50} C ${400 + i * 30} ${300 + i * 12}, ${700 - i * 20} ${520 + i * 6}, ${1700} ${200 + i * 50}" stroke="${i % 3 === 0 ? "#B5562F" : i % 3 === 1 ? "#2F4A3A" : "#F5EFE4"}" stroke-width="${i % 4 === 0 ? 2.5 : 1.2}" fill="none" opacity=".55"/>`).join("")}
   <ellipse cx="1080" cy="968" rx="220" ry="24" fill="url(#sh)"/>
-  <g transform="translate(880 0) scale(1 0.98)">${mannequinSvg("#EAE3D8", { type: "dress", palette: { primary: "#B5562F", secondary: "#EDE6D6" }, id: "hero" })}</g>
+  <g transform="translate(880 0) scale(1 0.98)">${mannequinSvg(undefined, { type: "dress", palette: { primary: "#B5562F", secondary: "#EDE6D6" }, id: "hero" })}</g>
   <rect width="1600" height="1000" filter="url(#grain)"/>
 </svg>`,
 );
 
 // --- Mannequin seul (scène orbitale quand aucun vêtement n'est sélectionné) --
 
-write("mannequin.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000">${mannequinSvg("#E7E0D4")}</svg>`);
+write("mannequin.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000">${mannequinSvg()}</svg>`);
 
 console.log(`Visuels de démonstration générés dans ${OUT}`);
