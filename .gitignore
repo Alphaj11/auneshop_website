@@ -50,3 +50,6 @@ next-env.d.ts
 .admin-password.local
 setup-db.sql
 
+
+# Vidéo et images d’accueil de test (licence inconnue) : uniquement en local
+/public/demo/hero-main/
