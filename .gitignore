@@ -45,3 +45,8 @@ next-env.d.ts
 /storage/
 /test-results/
 /playwright-report/
+
+# Fichiers locaux contenant des mots de passe
+.admin-password.local
+setup-db.sql
+
