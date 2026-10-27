@@ -92,7 +92,7 @@ export function CollectionForm({ collection }: { collection?: C }) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="accentColor" className={labelCls}>Couleur d&apos;ambiance</label>
-                  <input id="accentColor" name="accentColor" type="color" defaultValue={collection?.accentColor ?? "#3e0913"} className="h-10 w-full cursor-pointer rounded border border-line" />
+                  <input id="accentColor" name="accentColor" type="color" defaultValue={collection?.accentColor ?? "#3e0812"} className="h-10 w-full cursor-pointer rounded border border-line" />
                 </div>
                 <div>
                   <label htmlFor="position" className={labelCls}>Ordre</label>

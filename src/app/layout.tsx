@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import "@fontsource-variable/fraunces/full.css";
-import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/inter/index.css";
 import "./globals.css";
 import { getSettings } from "@/lib/settings";
@@ -21,12 +19,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = { themeColor: "#f4efe6", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#e6dac7", width: "device-width", initialScale: 1 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const motion = (await cookies()).get("aune_motion")?.value === "off" ? "off" : "on";
   return (
-    <html lang="fr" data-motion={motion}>
+    // suppressHydrationWarning : data-intro-vue est posé volontairement avant l'hydratation (IntroGate).
+    <html lang="fr" data-motion={motion} suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/fonts/cormorant-garamond-normal.woff2" as="font" type="font/woff2" crossOrigin="" />
+      </head>
       <body className="min-h-dvh">{children}</body>
     </html>
   );
