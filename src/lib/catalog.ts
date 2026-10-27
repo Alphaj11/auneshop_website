@@ -19,6 +19,8 @@ export type ProductCardData = {
   hoverImage: { url: string; alt: string } | null;
   /** Par couleur : visuel détouré et mannequin habillé (scène orbitale). */
   looks: { color: string; cutout: string | null; worn: string | null; gallery: string | null }[];
+  /** Toutes les images de galerie, dans l'ordre (images secondaires du mode immersif). */
+  gallery: string[];
   available: boolean;
   /** Tailles du premier coloris disponible, pour l'ajout rapide. */
   quick: { variantId: string; size: string; color: string; available: boolean }[];
@@ -60,6 +62,7 @@ export function toCard(p: ProductWithRelations): ProductCardData {
     image: gallery[0] ? { url: gallery[0].url, alt: gallery[0].alt } : null,
     hoverImage: gallery[1] ? { url: gallery[1].url, alt: gallery[1].alt } : null,
     looks,
+    gallery: gallery.map((i) => i.url),
     available: activeVariants.some(isVariantAvailable),
     quick: (() => {
       const color = activeVariants.find(isVariantAvailable)?.color ?? activeVariants[0]?.color;
@@ -126,6 +129,19 @@ export async function listProducts(opts: {
     limit: opts.limit ?? 60,
   });
   return rows.map(toCard);
+}
+
+/** Variantes actives de plusieurs produits (scène immersive des rayons Femme / Homme). */
+export async function listVariantsByProduct(ids: string[]) {
+  if (!ids.length) return new Map<string, (typeof productVariants.$inferSelect)[]>();
+  const rows = await db
+    .select()
+    .from(productVariants)
+    .where(and(inArray(productVariants.productId, ids), eq(productVariants.isActive, true)))
+    .orderBy(asc(productVariants.position));
+  const out = new Map<string, (typeof productVariants.$inferSelect)[]>();
+  for (const v of rows) out.set(v.productId, [...(out.get(v.productId) ?? []), v]);
+  return out;
 }
 
 /** Produits les plus vendus (commandes payées hors test), à défaut les produits à la une. */

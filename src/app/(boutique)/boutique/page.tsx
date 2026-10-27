@@ -2,9 +2,27 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
-import { listCategories, listProducts } from "@/lib/catalog";
+import { CollectionExperience } from "@/components/immersive/CollectionExperience";
+import type { OrbitVariant } from "@/components/immersive/OrbitScene";
+import { isVariantAvailable, listCategories, listProducts, listVariantsByProduct } from "@/lib/catalog";
+import { getSettings } from "@/lib/settings";
 
-type SP = { categorie?: string; rayon?: string; tri?: string; nouveautes?: string };
+type SP = { categorie?: string; rayon?: string; tri?: string; nouveautes?: string; vue?: string };
+
+const RAYONS = {
+  femme: {
+    name: "Femme",
+    tagline: "Le vestiaire femme",
+    description: "Robes portefeuille, blouses fluides, tops réversibles et pantalons amples, en coton tissé artisanalement.",
+    accentColor: "#C9A24A",
+  },
+  homme: {
+    name: "Homme",
+    tagline: "Le vestiaire homme",
+    description: "Chemises à col mao, vestes de travail et t-shirts tissés : des lignes simples, amples et structurées.",
+    accentColor: "#2F4A3A",
+  },
+};
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SP> }): Promise<Metadata> {
   const sp = await searchParams;
@@ -27,6 +45,35 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     return s ? `/boutique?${s}` : "/boutique";
   };
   const title = department === "femme" ? "Femme" : department === "homme" ? "Homme" : sp.nouveautes ? "Nouveautés" : "La boutique";
+
+  // Rayons Femme / Homme sans filtre : même expérience immersive que les collections.
+  if (department && !sp.categorie && !sp.nouveautes && !sp.tri) {
+    const settings = await getSettings();
+    const byProduct = await listVariantsByProduct(products.map((p) => p.id));
+    const variants: Record<string, OrbitVariant[]> = {};
+    for (const p of products)
+      variants[p.id] = (byProduct.get(p.id) ?? []).map((v) => ({
+        id: v.id,
+        size: v.size,
+        color: v.color,
+        colorHex: v.colorHex,
+        available: isVariantAvailable(v) || !settings.inventory.preventOverselling,
+        priceCents: v.priceCents ?? p.priceCents,
+      }));
+    const immersiveAllowed = settings.experience.orbitEnabled && products.length >= 3;
+    return (
+      <CollectionExperience
+        collection={{ ...RAYONS[department], isDemo: false }}
+        products={products}
+        variants={variants}
+        immersiveAllowed={immersiveAllowed}
+        initialView={immersiveAllowed && sp.vue !== "grille" ? "immersive" : "grid"}
+        mobileDefault={settings.experience.mobileDefault}
+        explicitView={sp.vue === "grille" ? "grid" : sp.vue === "immersion" ? "immersive" : null}
+        orbitSpeed={settings.experience.orbitSpeed}
+      />
+    );
+  }
 
   return (
     <div className="mx-auto max-w-[1600px] px-5 pb-10 pt-28 md:px-10 md:pt-36">

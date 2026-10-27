@@ -11,6 +11,49 @@ import { ArrowIcon } from "@/components/shop/Icons";
 
 export type OrbitVariant = { id: string; size: string; color: string; colorHex: string | null; available: boolean; priceCents: number };
 
+const PAPER: [number, number, number] = [230, 218, 199];
+
+/**
+ * Teinte dominante d'une image (moyenne pondérée par la saturation, au centre),
+ * utilisée pour faire prendre au décor la couleur du vêtement présenté.
+ */
+function useThemeColor(url: string | null | undefined, fallback: string) {
+  const [sampled, setSampled] = useState<{ url: string; rgb: [number, number, number] } | null>(null);
+  const rgb = sampled && sampled.url === url ? sampled.rgb : null;
+  useEffect(() => {
+    if (!url) return;
+    let alive = true;
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = 24;
+      c.height = 30;
+      const g = c.getContext("2d", { willReadFrequently: true });
+      if (!g) return;
+      g.drawImage(img, 0, 0, 24, 30);
+      const d = g.getImageData(4, 4, 16, 22).data;
+      let r = 0, gr = 0, b = 0, w = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        const max = Math.max(d[i], d[i + 1], d[i + 2]);
+        const min = Math.min(d[i], d[i + 1], d[i + 2]);
+        const k = 0.15 + (max ? (max - min) / max : 0) * 2;
+        r += d[i] * k;
+        gr += d[i + 1] * k;
+        b += d[i + 2] * k;
+        w += k;
+      }
+      if (alive && w) setSampled({ url, rgb: [r / w, gr / w, b / w] });
+    };
+    img.src = url;
+    return () => {
+      alive = false;
+    };
+  }, [url]);
+  if (!rgb) return { wash: `color-mix(in srgb, ${fallback} 30%, var(--paper))`, deep: `color-mix(in srgb, ${fallback} 45%, var(--paper-2))` };
+  const mixTo = (t: number) => `rgb(${rgb.map((v, i) => Math.round(v + (PAPER[i] - v) * t)).join(",")})`;
+  return { wash: mixTo(0.55), deep: mixTo(0.3) };
+}
+
 /**
  * Collection immersive : un mannequin au centre, les pièces en orbite elliptique.
  *
@@ -50,14 +93,19 @@ export function OrbitScene({
   const drag = useRef<{ x: number; phi: number; moved: boolean } | null>(null);
   const suppressClick = useRef(false);
 
+  const [view, setView] = useState<string | null>(null); // image secondaire mise en avant
+  const [orbitOpen, setOrbitOpen] = useState(false); // images secondaires visibles (survol)
   const product = items[selected];
   const look = product?.looks.find((l) => l.color === color) ?? product?.looks[0];
+  const mainImage = view ?? look?.gallery ?? null;
+  const satellites = (product?.gallery ?? []).filter((u) => u !== mainImage).slice(0, 5);
+  const theme = useThemeColor(look?.gallery ?? look?.worn, accent);
   const productVariants = product ? variants[product.id] ?? [] : [];
   const sizes = productVariants.filter((v) => v.color === (color ?? look?.color));
   const chosen = sizes.find((v) => v.size === size);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
+    const mq = window.matchMedia("(max-width: 1023px)");
     const on = () => setCompact(mq.matches);
     on();
     mq.addEventListener("change", on);
@@ -70,16 +118,17 @@ export function OrbitScene({
     if (!el) return;
     const w = el.clientWidth;
     const h = el.clientHeight;
-    const rx = w * (compact ? 0.4 : 0.36);
-    const ry = h * (compact ? 0.09 : 0.12);
-    const cy = h * (compact ? 0.66 : 0.68);
+    // L'anneau des autres pièces passe au pied de la pièce présentée.
+    const rx = w * (compact ? 0.42 : 0.4);
+    const ry = h * (compact ? 0.05 : 0.07);
+    const cy = h * (compact ? 0.83 : 0.86);
     nodes.current.forEach((node, i) => {
       if (!node) return;
       const a = (i / n) * Math.PI * 2 + phi.current;
       const depth = Math.cos(a); // 1 = devant, -1 = derrière
       const x = w / 2 + Math.sin(a) * rx;
       const y = cy + depth * ry;
-      const s = 0.55 + ((depth + 1) / 2) * 0.55;
+      const s = 0.5 + ((depth + 1) / 2) * 0.45;
       const focus = hovered === i ? 1.12 : 1;
       node.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${s * focus})`;
       node.style.zIndex = String(depth > 0 ? 30 + Math.round(depth * 10) : 5 + Math.round((depth + 1) * 5));
@@ -122,6 +171,7 @@ export function OrbitScene({
     setSelected(idx);
     setColor(null);
     setSize(null);
+    setView(null);
     bringToFront(idx);
   };
 
@@ -171,9 +221,29 @@ export function OrbitScene({
         if (e.key === "ArrowLeft") select(selected - 1);
       }}
     >
-      {/* Décor : mur, lumière, sol */}
-      <div className="absolute inset-0" aria-hidden style={{ background: `radial-gradient(ellipse 60% 55% at 50% 38%, ${accent}2e, transparent 70%), linear-gradient(180deg, var(--paper-2), var(--paper) 62%, var(--paper-3))` }} />
-      <div className="absolute inset-x-0 top-0 h-full opacity-40" aria-hidden style={{ background: "repeating-linear-gradient(90deg, transparent 0 120px, rgba(30,27,23,.035) 120px 121px)" }} />
+      {/* Décor : il prend la teinte de la pièce présentée, avec sa photo en flou d'ambiance. */}
+      <div
+        className="absolute inset-0 transition-[background] duration-[1400ms] ease-[var(--ease-cloth)]"
+        aria-hidden
+        style={{ background: `radial-gradient(ellipse 70% 60% at 50% 40%, ${theme.wash}, ${theme.deep} 120%)` }}
+      />
+      <AnimatePresence>
+        {mainImage && !worn && (
+          <motion.div
+            key={mainImage}
+            aria-hidden
+            className="absolute inset-0 overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.42 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2 }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={mainImage} alt="" className="h-full w-full scale-125 object-cover blur-[60px] saturate-[1.2]" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="absolute inset-0" aria-hidden style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, rgba(30,20,12,.18))" }} />
 
       <div
         ref={stage}
@@ -189,30 +259,79 @@ export function OrbitScene({
         }}
       >
         {overlay}
-        {/* Socle */}
-        <div aria-hidden className="absolute left-1/2 top-[68%] h-[24%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-ink/10 md:w-[72%]" style={{ background: `radial-gradient(ellipse at center, ${accent}22, transparent 70%)` }} />
-        <div aria-hidden className="absolute left-1/2 top-[87%] h-6 w-56 -translate-x-1/2 rounded-[50%] bg-ink/20 blur-xl" />
+        {/* Anneau au sol */}
+        <div aria-hidden className="absolute left-1/2 top-[86%] h-[14%] w-[86%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-ink/10 md:w-[82%]" />
+        <div aria-hidden className="absolute left-1/2 top-[90%] h-8 w-72 -translate-x-1/2 rounded-[50%] bg-ink/25 blur-2xl" />
 
-        {/* Mannequin central */}
-        <div className="pointer-events-none absolute left-1/2 top-[14%] z-20 h-[74%] w-[44%] max-w-[320px] -translate-x-1/2 md:top-[8%] md:h-[80%] md:w-[28%]">
+        {/* Pièce présentée, en grand ; ses images secondaires gravitent autour au survol. */}
+        <div
+          className="absolute left-1/2 top-[25%] z-20 h-[52%] -translate-x-1/2 md:top-[20%] md:h-[56%] lg:top-[9%] lg:h-[68%] xl:top-[7%] xl:h-[78%]"
+          style={{ aspectRatio: worn ? "2 / 5" : "4 / 5" }}
+          onMouseEnter={() => setOrbitOpen(true)}
+          onMouseLeave={() => setOrbitOpen(false)}
+        >
           <AnimatePresence mode="popLayout">
             <motion.div
-              key={`${product.id}-${look?.color}`}
+              key={`${product.id}-${look?.color}-${mainImage}`}
               className="absolute inset-0"
-              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, filter: "blur(10px)", clipPath: "inset(0 0 100% 0)" }}
-              animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)" }}
-              exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.02, filter: "blur(6px)" }}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 30, filter: "blur(12px)" }}
+              animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+              exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.04, filter: "blur(8px)" }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {worn ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={worn} alt={`Mannequin portant ${product.name}${look?.color ? `, coloris ${look.color}` : ""}`} className="h-full w-full object-contain drop-shadow-[0_30px_30px_rgba(30,27,23,.18)]" />
-              ) : look?.gallery ? (
+              ) : mainImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={look.gallery} alt={product.name} className="mx-auto mt-[10%] aspect-[4/5] w-full rounded object-cover shadow-xl" />
+                <img
+                  src={mainImage}
+                  alt={product.name}
+                  draggable={false}
+                  className="h-full w-full rounded-[6px] object-cover shadow-[0_40px_80px_-30px_rgba(30,20,12,.55)] ring-1 ring-white/30"
+                />
               ) : null}
             </motion.div>
           </AnimatePresence>
+
+          {!worn && !compact && satellites.length > 0 && (
+            <div
+              className={`pointer-events-none absolute inset-0 transition-opacity duration-700 ${orbitOpen ? "opacity-100" : "opacity-0"}`}
+              aria-hidden={!(orbitOpen)}
+            >
+              {/* Remonté à chaque pièce pour que la rotation et la contre-rotation des vignettes restent en phase. */}
+              <div key={product.id} className="absolute inset-0" style={{ animation: reduced ? undefined : "orbit-spin 38s linear infinite" }}>
+                {satellites.map((src, i) => {
+                  const a = (i / satellites.length) * 360 - 90;
+                  return (
+                    <div
+                      key={src}
+                      className="absolute left-1/2 top-1/2 h-0 w-full"
+                      style={{ transformOrigin: "0 0", transform: `rotate(${a}deg) translateX(${compact ? 58 : 68}%) rotate(${-a}deg)` }}
+                    >
+                      <div className="absolute left-0 top-0 w-[30%] -translate-x-1/2 -translate-y-1/2">
+                      <div style={{ animation: reduced ? undefined : "orbit-spin 38s linear infinite reverse" }}>
+                        <button
+                          type="button"
+                          onClick={() => setView(src)}
+                          className={`pointer-events-auto block w-full overflow-hidden rounded-[4px] shadow-[0_20px_40px_-18px_rgba(30,20,12,.6)] ring-2 ring-white/70 transition-[scale,opacity] duration-700 ease-[var(--ease-cloth)] hover:scale-110 ${
+                            orbitOpen ? "scale-100" : "scale-50"
+                          }`}
+                          style={{ transitionDelay: `${i * 70}ms` }}
+                          aria-label={`Voir l'image ${i + 2} de ${product.name}`}
+                          tabIndex={orbitOpen ? 0 : -1}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={src} alt="" draggable={false} className="aspect-[4/5] w-full object-cover" />
+                        </button>
+                      </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Pièces en orbite */}
@@ -240,12 +359,16 @@ export function OrbitScene({
               }}
               aria-label={`${p.name}, ${formatPrice(p.priceCents)}${i === selected ? " (sélectionné)" : ""}`}
               aria-pressed={i === selected}
-              className="absolute left-0 top-0 h-28 w-24 cursor-pointer rounded-full transition-[filter] will-change-transform md:h-40 md:w-32"
+              className="absolute left-0 top-0 h-20 w-16 cursor-pointer transition-[filter] will-change-transform md:h-32 md:w-[6.5rem]"
             >
-              {src && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={src} alt="" draggable={false} className="h-full w-full object-contain drop-shadow-[0_12px_14px_rgba(30,27,23,.22)]" />
-              )}
+              {src &&
+                (p.looks[0]?.cutout ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={src} alt="" draggable={false} className="h-full w-full object-contain drop-shadow-[0_12px_14px_rgba(30,27,23,.22)]" />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={src} alt="" draggable={false} className="h-full w-full rounded-[4px] object-cover shadow-[0_14px_24px_-10px_rgba(30,20,12,.5)] ring-1 ring-white/50" />
+                ))}
               {i === selected && <span aria-hidden className="absolute -bottom-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-ink" />}
             </button>
           );
@@ -286,7 +409,7 @@ export function OrbitScene({
       </div>
 
       {/* Panneau du produit sélectionné */}
-      <div className="relative z-50 mx-auto max-w-[1400px] px-5 pb-10 md:absolute md:bottom-10 md:right-10 md:w-[340px] md:px-0 md:pb-0 lg:right-14">
+      <div className="relative z-50 mx-auto max-w-[1400px] px-5 pb-10 md:max-w-xl lg:absolute lg:bottom-10 lg:right-14 lg:w-[340px] lg:px-0 lg:pb-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={product.id}
