@@ -15,6 +15,13 @@
       "when": 1792863206880,
       "tag": "0001_order_cart",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793211656103,
+      "tag": "0002_qamar",
+      "breakpoints": true
     }
   ]
 }

@@ -778,3 +778,62 @@ export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
 export const inventoryMovementsRelations = relations(inventoryMovements, ({ one }) => ({
   variant: one(productVariants, { fields: [inventoryMovements.variantId], references: [productVariants.id] }),
 }));
+
+// ---------------------------------------------------------------------------
+// Qamar : demandes de l'équipe de la boutique aux concepteurs du site
+// ---------------------------------------------------------------------------
+
+export const designerRequestType = pgEnum("designer_request_type", ["demande", "amelioration", "probleme"]);
+export const designerRequestPriority = pgEnum("designer_request_priority", ["basse", "normale", "haute", "urgente"]);
+export const designerRequestStatus = pgEnum("designer_request_status", ["nouveau", "en_cours", "resolu"]);
+
+export const designerRequests = pgTable(
+  "designer_requests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+    type: designerRequestType("type").notNull(),
+    priority: designerRequestPriority("priority").notNull().default("normale"),
+    status: designerRequestStatus("status").notNull().default("nouveau"),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    /** Page du site concernée (facultatif). */
+    pageUrl: text("page_url"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("designer_requests_created_idx").on(t.createdAt), index("designer_requests_status_idx").on(t.status)],
+);
+
+export const designerRequestAttachments = pgTable("designer_request_attachments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  requestId: uuid("request_id")
+    .notNull()
+    .references(() => designerRequests.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  createdAt: createdAt(),
+});
+
+/** Fil d'échanges sur une demande (équipe de la boutique et concepteurs). */
+export const designerRequestMessages = pgTable("designer_request_messages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  requestId: uuid("request_id")
+    .notNull()
+    .references(() => designerRequests.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+  message: text("message").notNull(),
+  createdAt: createdAt(),
+});
+
+export const designerRequestsRelations = relations(designerRequests, ({ many, one }) => ({
+  attachments: many(designerRequestAttachments),
+  messages: many(designerRequestMessages),
+  author: one(users, { fields: [designerRequests.userId], references: [users.id] }),
+}));
+export const designerRequestAttachmentsRelations = relations(designerRequestAttachments, ({ one }) => ({
+  request: one(designerRequests, { fields: [designerRequestAttachments.requestId], references: [designerRequests.id] }),
+}));
+export const designerRequestMessagesRelations = relations(designerRequestMessages, ({ one }) => ({
+  request: one(designerRequests, { fields: [designerRequestMessages.requestId], references: [designerRequests.id] }),
+  author: one(users, { fields: [designerRequestMessages.userId], references: [users.id] }),
+}));

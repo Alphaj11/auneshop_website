@@ -20,13 +20,15 @@ export const permissions = [
   "settings.manage",
   "team.manage",
   "audit.view",
+  "qamar.create",
+  "qamar.manage",
 ] as const;
 
 export type Permission = (typeof permissions)[number];
 
 const matrix: Record<Role, readonly Permission[]> = {
   customer: [],
-  order_manager: ["admin.access", "dashboard.view", "orders.view", "orders.manage", "orders.export", "customers.view"],
+  order_manager: ["admin.access", "dashboard.view", "orders.view", "orders.manage", "orders.export", "customers.view", "qamar.create"],
   store_manager: [
     "admin.access",
     "dashboard.view",
@@ -39,6 +41,7 @@ const matrix: Record<Role, readonly Permission[]> = {
     "inventory.manage",
     "content.manage",
     "customers.view",
+    "qamar.create",
   ],
   super_admin: permissions,
 };

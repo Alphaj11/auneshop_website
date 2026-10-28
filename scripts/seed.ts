@@ -50,6 +50,7 @@ async function main() {
 
   if (reset) {
     const tables = [
+      "designer_request_messages", "designer_request_attachments", "designer_requests",
       "audit_logs", "order_events", "shipments", "payments", "order_items", "orders", "inventory_movements",
       "cart_items", "carts", "wishlist_items", "collection_products", "collections", "product_images",
       "product_variants", "products", "categories", "discounts", "homepage_sections", "newsletter_subscribers",
