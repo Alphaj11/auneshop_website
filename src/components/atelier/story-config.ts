@@ -8,7 +8,10 @@
  * - EDITORIAL : section qui suit la scène.
  */
 
-export const MEDIA = {
+export type StoryMedia = { hd: string; sd: string; poster: string; fallbackPoster: string };
+export type StoryScrub = { trackScreens: number; smoothing: number; minDelta: number };
+
+export const MEDIA: StoryMedia = {
   hd: "/media/atelier/histoire-1080.mp4",
   sd: "/media/atelier/histoire-720.mp4",
   /** Première image du clip : affichée avant le chargement, en cas d'erreur, et si les animations sont réduites. */
@@ -17,7 +20,7 @@ export const MEDIA = {
   fallbackPoster: "/demo/atelier/fils.jpg",
 };
 
-export const SCRUB = {
+export const SCRUB: StoryScrub = {
   /** Longueur du parcours, en hauteurs d'écran (la scène reste collée pendant ce temps). */
   trackScreens: 7,
   /** Lissage : part de l'écart rattrapée à chaque image (1 = immédiat). */

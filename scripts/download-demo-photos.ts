@@ -67,6 +67,22 @@ attribution obligatoire, modification autorisée), et de la photo Unsplash \`her
 
 Ces images ne montrent pas l'atelier d'Aune : à remplacer, idéalement, par un tournage dans
 l'atelier (gros plans de fils, métier, mains, aiguille, pièce finie, fin claire).
+
+## Vidéo de l'accueil, « L'histoire d'un vêtement » (public/media/voyage/)
+
+\`voyage-1080.mp4\`, \`voyage-720.mp4\` et \`voyage-poster.jpg\` (preset « voyage » du même script),
+montés à partir de vidéos Pexels sous la [licence Pexels](https://www.pexels.com/license/) :
+
+| Plan | Sujet | Auteur | Source |
+| --- | --- | --- | --- |
+| 1. Le coton | Champ de coton sous un ciel clair | Lio Voo | https://www.pexels.com/video/13943183/ |
+| 2. Le fil | Rouet traditionnel | Tawseef Ahmad | https://www.pexels.com/video/37523883/ |
+| 3. La toile | Métier à tisser traditionnel | Magda Ehlers | https://www.pexels.com/video/32655900/ |
+| 4. L'envol | Coucher de soleil par le hublot | Kelly | https://www.pexels.com/video/3740041/ |
+| 5. Les nuages | Nuages vus du hublot | Jessica Bonafede | https://www.pexels.com/video/34467289/ |
+| 6. L'arrivée | Femme en robe marchant en ville | Lê Cuộc | https://www.pexels.com/video/10394872/ |
+
+Ces images n'ont pas été tournées pour Aune (ni en Inde pour toutes) : elles illustrent le voyage.
 `,
 );
 console.log("Crédits écrits dans docs/CREDITS-PHOTOS.md");

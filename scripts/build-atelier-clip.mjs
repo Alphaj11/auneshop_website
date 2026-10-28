@@ -1,13 +1,17 @@
 /**
- * Monte le clip de la page « L'atelier » (« Chaque fil a son histoire ») avec ffmpeg.
+ * Monte les clips pilotés par le scroll avec ffmpeg.
  *
- *   node scripts/build-atelier-clip.mjs <dossier des clips sources>
+ *   node scripts/build-atelier-clip.mjs <dossier des clips sources> [atelier|voyage]
  *
- * Sources : 5 vidéos Pexels (licence Pexels, usage commercial gratuit) et une photo Unsplash (acte 5),
- * nommées <id>.mp4 dans le dossier donné (téléchargées depuis https://www.pexels.com/download/video/<id>/).
- * Sorties (public/media/atelier/) : histoire-1080.mp4, histoire-720.mp4, histoire-poster.jpg.
+ * - atelier : page « L'atelier », « Chaque fil a son histoire » (public/media/atelier/histoire-*).
+ * - voyage : accueil, « L'histoire d'un vêtement », du champ de coton en Inde au vêtement porté,
+ *   en passant par un vol (public/media/voyage/voyage-*).
  *
- * Le clip est muet, en 24 i/s, avec une image clé toutes les 2 images pour que le scroll
+ * Sources : vidéos Pexels (licence Pexels, usage commercial gratuit) nommées <id>.mp4 dans le
+ * dossier donné (téléchargées depuis https://www.pexels.com/download/video/<id>/), et une photo
+ * Unsplash pour l'atelier. Crédits : docs/CREDITS-PHOTOS.md.
+ *
+ * Les clips sont muets, en 24 i/s, avec une image clé toutes les 2 images pour que le scroll
  * puisse viser n'importe quel instant sans à-coup. La fin s'éclaircit jusqu'à la couleur
  * du papier du site (#E6DAC7) : la transition vers la section suivante est dans l'image.
  */
@@ -17,22 +21,42 @@ import path from "node:path";
 
 const SRC = process.argv[2];
 if (!SRC) throw new Error("Indiquez le dossier des clips sources.");
-const OUT = path.resolve("public/media/atelier");
-mkdirSync(OUT, { recursive: true });
+const PRESET = process.argv[3] ?? "atelier";
 
 /**
  * Un plan par acte : source, début (s), durée (s), recadrage progressif (zoom de départ → zoom
  * d'arrivée) et point visé (fx, fy : 0 = gauche/haut, 0,5 = centre, 1 = droite/bas).
  */
-const SHOTS = [
-  { id: "5514239", start: 0, dur: 1.7, zoom: [1.6, 1.0] }, // 1. la matière brute : la caméra prend de la hauteur
-  { id: "32655900", start: 2.0, dur: 1.5, zoom: [1.15, 1.0] }, // 2. le tissage
-  { id: "5815279", start: 7.6, dur: 1.5, zoom: [1.0, 1.1] }, // 3. le geste humain
-  { id: "35166550", start: 9.5, dur: 1.5, zoom: [1.15, 1.0], fx: 0.6 }, // 4. l'aiguille et le fil
-  // 5. le vêtement prend forme : photo fixe (Unsplash, robe blanche devant un mur de pierre), la caméra recule.
-  { image: "public/demo/photos/hero.jpg", dur: 1.7, zoom: [1.35, 1.0], fy: 0.55 },
-  { id: "30104841", start: 0.5, dur: 1.5, zoom: [1.0, 1.3] }, // 6. la matière s'efface vers la lumière
-];
+const PRESETS = {
+  atelier: {
+    dir: "public/media/atelier",
+    name: "histoire",
+    shots: [
+      { id: "5514239", start: 0, dur: 1.7, zoom: [1.6, 1.0] }, // 1. la matière brute : la caméra prend de la hauteur
+      { id: "32655900", start: 2.0, dur: 1.5, zoom: [1.15, 1.0] }, // 2. le tissage
+      { id: "5815279", start: 7.6, dur: 1.5, zoom: [1.0, 1.1] }, // 3. le geste humain
+      { id: "35166550", start: 9.5, dur: 1.5, zoom: [1.15, 1.0], fx: 0.6 }, // 4. l'aiguille et le fil
+      // 5. le vêtement prend forme : photo fixe (Unsplash, robe blanche devant un mur de pierre), la caméra recule.
+      { image: "public/demo/photos/hero.jpg", dur: 1.7, zoom: [1.35, 1.0], fy: 0.55 },
+      { id: "30104841", start: 0.5, dur: 1.5, zoom: [1.0, 1.3] }, // 6. la matière s'efface vers la lumière
+    ],
+  },
+  voyage: {
+    dir: "public/media/voyage",
+    name: "voyage",
+    shots: [
+      { id: "13943183", start: 2.0, dur: 1.6, zoom: [1.3, 1.0], fy: 0.6 }, // 1. le champ de coton
+      { id: "37523883", start: 4.5, dur: 1.5, zoom: [1.0, 1.15] }, // 2. le filage au rouet
+      { id: "32655900", start: 4.0, dur: 1.4, zoom: [1.1, 1.0] }, // 3. le tissage
+      { id: "3740041", start: 4.2, dur: 2.0, zoom: [1.0, 1.45], fx: 0.55 }, // 4. l'envol : la caméra entre dans le hublot
+      { id: "34467289", start: 6.0, dur: 1.5, zoom: [1.0, 1.15], fy: 0.55 }, // 5. au-dessus des nuages
+      { id: "10394872", start: 0.4, dur: 1.9, zoom: [1.15, 1.0], fx: 0.55 }, // 6. l'arrivée : le vêtement porté
+    ],
+  },
+};
+const { dir, name, shots: SHOTS } = PRESETS[PRESET];
+const OUT = path.resolve(dir);
+mkdirSync(OUT, { recursive: true });
 const XFADE = 0.35;
 const PAPER = "0xE6DAC7";
 
@@ -100,9 +124,9 @@ const encode = (height, file, crf) =>
     { stdio: "inherit" },
   );
 
-encode(1080, "histoire-1080.mp4", 25);
-encode(720, "histoire-720.mp4", 27);
-execFileSync("ffmpeg", ["-y", "-i", path.join(OUT, "histoire-1080.mp4"), "-frames:v", "1", "-update", "1", "-q:v", "3", path.join(OUT, "histoire-poster.jpg")], {
+encode(1080, `${name}-1080.mp4`, 25);
+encode(720, `${name}-720.mp4`, 27);
+execFileSync("ffmpeg", ["-y", "-i", path.join(OUT, `${name}-1080.mp4`), "-frames:v", "1", "-update", "1", "-q:v", "3", path.join(OUT, `${name}-poster.jpg`)], {
   stdio: "inherit",
 });
 console.log(`Clip monté : ${total.toFixed(2)} s → ${OUT}`);
