@@ -20,7 +20,7 @@ export function AtelierStory() {
               </span>
             ))}
           </h2>
-          <div className="mt-12 grid gap-10 md:grid-cols-[1.4fr_1fr] md:gap-20">
+          <div className="mt-8 grid gap-8 md:grid-cols-[1.4fr_1fr] md:gap-16">
             <p className="text-xl leading-relaxed md:text-2xl">{EDITORIAL.intro}</p>
             <ul className="space-y-3 self-end border-l border-line pl-6 text-sm text-ink-soft">
               {EDITORIAL.facts.map((f) => (
@@ -28,7 +28,7 @@ export function AtelierStory() {
               ))}
             </ul>
           </div>
-          <div className="mt-20 grid gap-10 md:grid-cols-3 md:gap-12">
+          <div className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
             {EDITORIAL.blocks.map((b, i) => (
               <div key={b.title} className="border-t border-line pt-6">
                 <p className="eyebrow">{String(i + 1).padStart(2, "0")}</p>
@@ -37,7 +37,7 @@ export function AtelierStory() {
               </div>
             ))}
           </div>
-          <Link href={EDITORIAL.cta.href} className="btn btn-primary mt-16">
+          <Link href={EDITORIAL.cta.href} className="btn btn-primary mt-10">
             {EDITORIAL.cta.label}
           </Link>
         </div>

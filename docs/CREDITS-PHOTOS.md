@@ -65,3 +65,13 @@ montés à partir de vidéos Pexels sous la [licence Pexels](https://www.pexels.
 | 6. L'arrivée | Femme en robe marchant en ville | Lê Cuộc | https://www.pexels.com/video/10394872/ |
 
 Ces images n'ont pas été tournées pour Aune (ni en Inde pour toutes) : elles illustrent le voyage.
+
+## Autres photos d'illustration (public/media/)
+
+| Fichier | Sujet | Auteur | Licence | Source |
+| --- | --- | --- | --- | --- |
+| `projet/mere-enfant.jpg` | Mère en sari tenant son enfant (page « Le projet ») | Dharmjeet Kumar | Pexels | https://www.pexels.com/photo/11557844/ |
+| `atelier/mannequin.jpg` | Buste de couture blanc, recadré (sur-mesure) | Christopher Kinsey | Unsplash | https://unsplash.com/photos/BGGtIVFrcnQ |
+
+La photo de la page « Le projet » illustre l'esprit du partenariat : ce ne sont pas des artisanes
+de l'atelier Aune. À remplacer par un portrait réalisé avec leur accord.

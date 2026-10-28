@@ -324,7 +324,7 @@ html[data-intro-vue="1"] [data-testid="intro"] {
 }
 .story-editorial {
   position: relative;
-  padding: 8rem 0 4rem;
+  padding: 5rem 0 3.5rem;
   background: var(--paper);
 }
 .story-static-media {

@@ -127,7 +127,7 @@ export function LaundryBasket({ cards }: { cards: BasketCard[] }) {
 
   return (
     // Pas de z-index ici : le calque des cartes doit passer au-dessus de l'en-tête.
-    <section className="relative px-5 pb-24 pt-10 text-center md:px-10" aria-labelledby="panier-titre">
+    <section className="relative pb-16 pt-12 text-center" aria-labelledby="panier-titre">
       <h2 id="panier-titre" className="display-md">
         Dans le panier à linge
       </h2>
@@ -140,7 +140,7 @@ export function LaundryBasket({ cards }: { cards: BasketCard[] }) {
         onClick={() => (open ? close() : setOpen(true))}
         aria-expanded={open}
         aria-controls="panier-contenu"
-        className="group mx-auto mt-8 block w-[min(80vw,22rem)] transition-transform duration-500 ease-[var(--ease-cloth)] hover:-translate-y-2"
+        className="group mx-auto mt-5 block w-[min(70vw,17rem)] transition-transform duration-500 ease-[var(--ease-cloth)] hover:-translate-y-2"
       >
         <BasketArt />
         <span className="mt-2 inline-block text-xs uppercase tracking-[0.2em] text-ink-soft group-hover:text-ink">

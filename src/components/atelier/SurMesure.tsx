@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { mannequinSvg } from "@/lib/garments";
+
 import { formatPrice } from "@/lib/money";
 import { useCart } from "@/components/shop/CartProvider";
 import { recommendSize, SUR_MESURE_KEY } from "./sizing";
@@ -17,8 +17,6 @@ export type SurMesureProduct = {
 
 const H = { min: 145, max: 200, step: 1, initial: 168 };
 const W = { min: 40, max: 130, step: 1, initial: 62 };
-// Identifiants SVG figés : même balisage côté serveur et navigateur.
-const MANNEQUIN = mannequinSvg().replace(/mq\d+/g, "mqsm");
 
 /**
  * Jauge verticale accessible : rôle « slider », flèches / Page / Début / Fin au clavier,
@@ -132,11 +130,11 @@ export function SurMesure({ products }: { products: SurMesureProduct[] }) {
   const size = recommendSize(height, weight, sizes);
   const variant = product?.variants.find((v) => v.color === activeColor && v.size === size);
 
-  // Silhouette : la hauteur suit la taille (200 cm = cadre plein), la largeur suit en plus
-  // la corpulence (IMC relatif à 22) ; le mannequin ne sort jamais du cadre.
+  // Silhouette : la hauteur suit la taille, la largeur suit en plus la corpulence (IMC relatif à 22).
+  // La photo n'est jamais réduite (ses bords resteraient visibles dans l'arche) : de 1 à 1,25.
   const bmi = weight / (height / 100) ** 2;
-  const sy = height / 200;
-  const sx = sy * Math.min(1.35, Math.max(0.82, Math.sqrt(bmi / 22)));
+  const sy = 1 + ((height - H.min) / (H.max - H.min)) * 0.25;
+  const sx = sy * Math.min(1.3, Math.max(1, 0.75 + Math.sqrt(bmi / 22) * 0.35));
 
   if (!product) return null;
 
@@ -160,37 +158,44 @@ export function SurMesure({ products }: { products: SurMesureProduct[] }) {
   };
 
   return (
-    <section className="bg-paper-2 py-24 md:py-32" aria-labelledby="sur-mesure-titre">
+    <section className="bg-paper-2 py-14 md:py-20" aria-labelledby="sur-mesure-titre">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <p className="eyebrow">L&apos;atelier sur mesure</p>
-        <h2 id="sur-mesure-titre" className="display-lg mt-3 max-w-3xl">
-          Une pièce ajustée <em>à votre silhouette.</em>
-        </h2>
-        <p className="mt-5 max-w-2xl text-ink-soft">
-          Choisissez une pièce, indiquez votre taille et votre poids : nous vous conseillons une taille, et vous pouvez
-          préciser vos mesures (longueur de jambe, tour de taille, poitrine…) pour que l&apos;atelier ajuste la coupe.
-        </p>
+        <div className="grid gap-4 md:grid-cols-[1fr_1fr] md:items-end">
+          <div>
+            <p className="eyebrow">L&apos;atelier sur mesure</p>
+            <h2 id="sur-mesure-titre" className="display-lg mt-3">
+              Une pièce ajustée <em>à votre silhouette.</em>
+            </h2>
+          </div>
+          <p className="text-ink-soft">
+            Choisissez une pièce, indiquez votre taille et votre poids : nous vous conseillons une taille, et vous pouvez
+            préciser vos mesures (longueur de jambe, tour de taille, poitrine…) pour que l&apos;atelier ajuste la coupe.
+          </p>
+        </div>
 
-        <div className="mt-14 grid items-center gap-10 md:grid-cols-[auto_1fr_minmax(0,22rem)] md:gap-14">
-          {/* Jauges */}
-          <div className="flex justify-center gap-10 md:flex-col md:gap-14">
+        <div className="mt-10 grid items-center gap-8 md:grid-cols-[auto_1fr_minmax(0,20rem)] md:gap-10">
+          {/* Jauges, côte à côte */}
+          <div className="flex justify-center gap-8">
             <Gauge id="sm-taille" label="Taille" unit="cm" value={height} range={H} onChange={setHeight} />
             <Gauge id="sm-poids" label="Poids" unit="kg" value={weight} range={W} onChange={setWeight} />
           </div>
 
-          {/* Mannequin */}
-          <div className="relative mx-auto h-[28rem] w-full max-w-sm md:h-[36rem]" aria-hidden>
-            <span className="absolute bottom-0 left-1/2 h-4 w-48 -translate-x-1/2 rounded-[50%] bg-ink/15 blur-md" />
-            <svg viewBox="0 0 400 1000" className="h-full w-full overflow-visible">
-              <g
+          {/* Mannequin de couture (photo) dans une arche : il s'ajuste à la silhouette. */}
+          <div className="relative mx-auto h-[26rem] w-[16rem] md:h-[32rem] md:w-[19rem]" aria-hidden>
+            <div className="absolute inset-0 overflow-hidden rounded-t-full bg-gradient-to-b from-[#a9a9a9] via-[#cfcfcf] to-[#dcdcdc] shadow-[inset_0_0_40px_rgba(0,0,0,.18)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/media/atelier/mannequin.jpg"
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
                 style={{
                   transform: `scale(${sx}, ${sy})`,
-                  transformOrigin: "200px 990px",
+                  transformOrigin: "50% 100%",
                   transition: "transform 0.45s var(--ease-cloth)",
                 }}
-                dangerouslySetInnerHTML={{ __html: MANNEQUIN }}
               />
-            </svg>
+            </div>
+            <span className="absolute -bottom-3 left-1/2 h-4 w-40 -translate-x-1/2 rounded-[50%] bg-ink/20 blur-md" />
           </div>
 
           {/* Pièce de référence */}
@@ -230,7 +235,7 @@ export function SurMesure({ products }: { products: SurMesureProduct[] }) {
         </div>
 
         {/* Précisions de la commande */}
-        <div className="mt-16 grid gap-8 border-t border-line pt-10 md:grid-cols-4">
+        <div className="mt-10 grid gap-8 border-t border-line pt-8 md:grid-cols-4">
           <div>
             <p className="eyebrow">Taille conseillée</p>
             <p className="mt-2 font-display text-4xl">{size ?? "—"}</p>
