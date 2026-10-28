@@ -271,6 +271,7 @@ html[data-intro-vue="1"] [data-testid="intro"] {
 }
 .story-block {
   position: absolute;
+  top: var(--top);
   translate: 0 -50%;
   color: var(--paper);
   text-shadow: 0 1px 18px rgba(20, 8, 6, 0.45);
@@ -331,6 +332,9 @@ html[data-intro-vue="1"] [data-testid="intro"] {
 }
 /* Mobile : une colonne, titres centrés, blocs en miroir recentrés. */
 @media (max-width: 767px) {
+  .story-block {
+    top: var(--top-m, var(--top));
+  }
   .story-block--left,
   .story-block--right {
     left: 50%;

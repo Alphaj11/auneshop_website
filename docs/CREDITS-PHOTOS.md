@@ -30,3 +30,22 @@ une marque cautionne le produit. Sur le site, les fiches restent marquées « Ex
 | phir | `collection-phir.jpg` | robe blanche devant un mur de pierre | Alejandro Morelos | https://unsplash.com/photos/2-P-dXuUYYM |
 | surya | `collection-surya.jpg` | top à rayures jaune et blanc | LaCreme.com | https://unsplash.com/photos/uQUdqbJnj3k |
 | aadmi | `collection-aadmi.jpg` | veste de travail blanche | Filip Rankovic Grobgaard | https://unsplash.com/photos/hnKGJ4dXsYE |
+
+## Vidéo de la page « L'atelier » (public/media/atelier/)
+
+`histoire-1080.mp4`, `histoire-720.mp4` et `histoire-poster.jpg` sont montés avec
+`scripts/build-atelier-clip.mjs` à partir de cinq vidéos Pexels, sous la
+[licence Pexels](https://www.pexels.com/license/) (usage gratuit, y compris commercial, sans
+attribution obligatoire, modification autorisée), et de la photo Unsplash `hero.jpg` ci-dessus :
+
+| Acte | Sujet | Auteur | Source |
+| --- | --- | --- | --- |
+| 1. La matière | Tissu jaune en macro | StefWithAnF | https://www.pexels.com/video/5514239/ |
+| 2. Le tissage | Métier à tisser traditionnel | Magda Ehlers | https://www.pexels.com/video/32655900/ |
+| 3. Le geste | Mains qui cousent | Videogrammer .com | https://www.pexels.com/video/5815279/ |
+| 4. La couture | Aiguille et fil | Marek Ruczaj | https://www.pexels.com/video/35166550/ |
+| 5. Le vêtement | Robe blanche devant un mur de pierre (photo) | Alejandro Morelos (Unsplash) | https://unsplash.com/photos/2-P-dXuUYYM |
+| 6. La lumière | Tissu blanc texturé | Nova lv | https://www.pexels.com/video/30104841/ |
+
+Ces images ne montrent pas l'atelier d'Aune : à remplacer, idéalement, par un tournage dans
+l'atelier (gros plans de fils, métier, mains, aiguille, pièce finie, fin claire).

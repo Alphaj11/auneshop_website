@@ -3,7 +3,7 @@
  *
  *   node scripts/build-atelier-clip.mjs <dossier des clips sources>
  *
- * Sources : 6 vidéos Pexels (licence Pexels, usage commercial gratuit), une par acte,
+ * Sources : 5 vidéos Pexels (licence Pexels, usage commercial gratuit) et une photo Unsplash (acte 5),
  * nommées <id>.mp4 dans le dossier donné (téléchargées depuis https://www.pexels.com/download/video/<id>/).
  * Sorties (public/media/atelier/) : histoire-1080.mp4, histoire-720.mp4, histoire-poster.jpg.
  *
@@ -20,27 +20,37 @@ if (!SRC) throw new Error("Indiquez le dossier des clips sources.");
 const OUT = path.resolve("public/media/atelier");
 mkdirSync(OUT, { recursive: true });
 
-/** Un plan par acte : source, début (s), durée (s), recadrage progressif (zoom de départ → zoom d'arrivée). */
+/**
+ * Un plan par acte : source, début (s), durée (s), recadrage progressif (zoom de départ → zoom
+ * d'arrivée) et point visé (fx, fy : 0 = gauche/haut, 0,5 = centre, 1 = droite/bas).
+ */
 const SHOTS = [
-  { id: "5514239", start: 0.5, dur: 1.7, zoom: [1.55, 1.0] }, // 1. la matière brute : la caméra prend de la hauteur
+  { id: "5514239", start: 0, dur: 1.7, zoom: [1.6, 1.0] }, // 1. la matière brute : la caméra prend de la hauteur
   { id: "32655900", start: 2.0, dur: 1.5, zoom: [1.15, 1.0] }, // 2. le tissage
-  { id: "5815279", start: 1.0, dur: 1.5, zoom: [1.0, 1.1] }, // 3. le geste humain
-  { id: "35166550", start: 1.0, dur: 1.5, zoom: [1.12, 1.0] }, // 4. l'aiguille et la couture
-  { id: "8997510", start: 0.5, dur: 1.6, zoom: [1.2, 1.0] }, // 5. le vêtement prend forme
-  { id: "30104841", start: 0.5, dur: 1.5, zoom: [1.0, 1.25] }, // 6. la matière s'efface vers la lumière
+  { id: "5815279", start: 7.6, dur: 1.5, zoom: [1.0, 1.1] }, // 3. le geste humain
+  { id: "35166550", start: 9.5, dur: 1.5, zoom: [1.15, 1.0], fx: 0.6 }, // 4. l'aiguille et le fil
+  // 5. le vêtement prend forme : photo fixe (Unsplash, robe blanche devant un mur de pierre), la caméra recule.
+  { image: "public/demo/photos/hero.jpg", dur: 1.7, zoom: [1.35, 1.0], fy: 0.55 },
+  { id: "30104841", start: 0.5, dur: 1.5, zoom: [1.0, 1.3] }, // 6. la matière s'efface vers la lumière
 ];
 const XFADE = 0.35;
 const PAPER = "0xE6DAC7";
 
-const inputs = SHOTS.flatMap((s) => ["-ss", String(s.start), "-t", String(s.dur), "-i", path.join(SRC, `${s.id}.mp4`)]);
+const inputs = SHOTS.flatMap((s) =>
+  s.image
+    ? ["-loop", "1", "-framerate", "24", "-t", String(s.dur), "-i", path.resolve(s.image)]
+    : ["-ss", String(s.start), "-t", String(s.dur), "-i", path.join(SRC, `${s.id}.mp4`)],
+);
 
 // Chaque plan : 24 i/s, recadrage progressif centré, étalonnage chaud et doux commun à tous.
 const chains = SHOTS.map((s, i) => {
   const [z0, z1] = s.zoom;
   const z = `(${z0}+(${z1}-${z0})*t/${s.dur})`;
   return (
+    // Le cadre a une taille fixe : on agrandit l'image image par image, puis on recadre au point visé.
     `[${i}:v]fps=24,scale=2304:1296:force_original_aspect_ratio=increase,crop=2304:1296,` +
-    `crop=w='2304/${z}':h='1296/${z}':x='(iw-ow)/2':y='(ih-oh)/2',scale=1920:1080,setsar=1,` +
+    `scale=w='trunc(2304*${z}/2)*2':h='trunc(1296*${z}/2)*2':eval=frame,` +
+    `crop=2304:1296:x='(iw-ow)*${s.fx ?? 0.5}':y='(ih-oh)*${s.fy ?? 0.5}',scale=1920:1080,setsar=1,` +
     `eq=saturation=0.86:contrast=1.02:gamma=1.03,colorbalance=rm=0.03:gm=0.01:bm=-0.04,format=yuv420p,settb=AVTB[v${i}]`
   );
 });
@@ -92,7 +102,7 @@ const encode = (height, file, crf) =>
 
 encode(1080, "histoire-1080.mp4", 25);
 encode(720, "histoire-720.mp4", 27);
-execFileSync("ffmpeg", ["-y", "-i", path.join(OUT, "histoire-1080.mp4"), "-frames:v", "1", "-q:v", "3", path.join(OUT, "histoire-poster.jpg")], {
+execFileSync("ffmpeg", ["-y", "-i", path.join(OUT, "histoire-1080.mp4"), "-frames:v", "1", "-update", "1", "-q:v", "3", path.join(OUT, "histoire-poster.jpg")], {
   stdio: "inherit",
 });
 console.log(`Clip monté : ${total.toFixed(2)} s → ${OUT}`);

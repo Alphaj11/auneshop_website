@@ -12,7 +12,10 @@ const blockTop = (at: number) => `calc(${at * (SCRUB.trackScreens - 1) * 100}lvh
 
 function Block({ block }: { block: StoryBlock }) {
   return (
-    <div className={`story-block story-block--${block.side}`} style={{ top: blockTop(block.at) }}>
+    <div
+      className={`story-block story-block--${block.side}`}
+      style={{ "--top": blockTop(block.at), "--top-m": blockTop(block.atMobile ?? block.at) } as React.CSSProperties}
+    >
       {block.eyebrow && <p className="story-eyebrow">{block.eyebrow}</p>}
       <h2 className={block.size === "xl" ? "story-title-xl" : "story-title"}>
         {block.title.map((line) => (

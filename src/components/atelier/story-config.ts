@@ -30,6 +30,8 @@ export type StoryBlock = {
   id: string;
   /** Progression (0–1) à laquelle le bloc passe au centre de l'écran. */
   at: number;
+  /** Variante sur mobile (une seule colonne : on espace les blocs en miroir). */
+  atMobile?: number;
   /** Disposition sur grand écran. */
   side: "center" | "left" | "right";
   eyebrow?: string;
@@ -41,31 +43,33 @@ export type StoryBlock = {
 
 export const BLOCKS: StoryBlock[] = [
   // Acte 1 : aucun texte, la matière seule.
-  { id: "fil", at: 0.16, side: "center", eyebrow: "Notre histoire", title: ["Tout", "commence", "par un", "fil."], size: "xl" },
+  { id: "fil", at: 0.24, side: "center", eyebrow: "Notre histoire", title: ["Tout", "commence", "par un", "fil."], size: "xl" },
   {
     id: "geste",
-    at: 0.38,
+    at: 0.4,
     side: "left",
     title: ["Le temps du geste"],
     text: "Derrière chaque détail, il y a un geste. Derrière chaque finition, une attention portée à ce qui ne se voit pas toujours au premier regard.",
   },
   {
     id: "detail",
-    at: 0.55,
+    at: 0.52,
+    atMobile: 0.49,
     side: "left",
     title: ["Le soin du détail"],
     text: "Une couture, une finition, une texture : chaque détail participe à l'équilibre du vêtement.",
   },
   {
     id: "matiere",
-    at: 0.6,
+    at: 0.58,
+    atMobile: 0.6,
     side: "right",
     title: ["La matière avant tout"],
     text: "Le toucher, le tombé et la tenue donnent au tissu toute sa personnalité.",
   },
   {
     id: "durer",
-    at: 0.76,
+    at: 0.71,
     side: "center",
     title: ["Pensé pour durer."],
     text: "Des matières aux finitions, chaque détail compte.",
