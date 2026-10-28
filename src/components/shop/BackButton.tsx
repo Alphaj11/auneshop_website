@@ -31,7 +31,7 @@ export function BackButton() {
       key={pathname}
       type="button"
       onClick={back}
-      className="back-btn group flex min-h-11 min-w-11 items-center justify-center gap-2 text-[0.72rem] uppercase tracking-[0.18em] xl:justify-start"
+      className="back-btn group flex min-h-11 min-w-11 items-center justify-center gap-2 text-[0.72rem] uppercase tracking-[0.18em] 2xl:justify-start"
       aria-label="Revenir à la page précédente"
     >
       <svg viewBox="0 0 48 22" width="40" height="18" className="back-thread overflow-visible" aria-hidden>
@@ -39,7 +39,7 @@ export function BackButton() {
         <path className="back-head" d="M10 5 L4 11 L10 17" />
         <circle className="back-knot" cx="46" cy="13" r="1.6" />
       </svg>
-      <span className="hidden xl:inline">Retour</span>
+      <span className="hidden 2xl:inline">Retour</span>
     </button>
   );
 }
