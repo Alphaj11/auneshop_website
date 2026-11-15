@@ -20,6 +20,7 @@ const nav: { href: string; label: string; perm: Permission; icon: string }[] = [
   { href: "/admin/reglages", label: "Réglages", perm: "settings.manage", icon: "⚙" },
   { href: "/admin/equipe", label: "Équipe et rôles", perm: "team.manage", icon: "◈" },
   { href: "/admin/journal", label: "Journal d'audit", perm: "audit.view", icon: "≡" },
+  { href: "/admin/qamar", label: "Qamar", perm: "qamar.create", icon: "☾" },
 ];
 
 export function AdminShell({

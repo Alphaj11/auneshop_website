@@ -27,7 +27,7 @@ const RAYONS = {
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SP> }): Promise<Metadata> {
   const sp = await searchParams;
   const title = sp.rayon === "femme" ? "Femme" : sp.rayon === "homme" ? "Homme" : sp.nouveautes ? "Nouveautés" : "La boutique";
-  return { title, alternates: { canonical: sp.rayon ? `/boutique?rayon=${sp.rayon}` : "/boutique" } };
+  return { title, alternates: { canonical: sp.rayon ? `/${sp.rayon}` : "/boutique" } };
 }
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<SP> }) {

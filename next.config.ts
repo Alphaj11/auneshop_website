@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
+// Vitrine statique (GitHub Pages) : servie dans un sous-dossier, sans optimiseur d'images. Voir scripts/build-vitrine.mjs.
+const vitrine = process.env.NEXT_PUBLIC_VITRINE === "1";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || undefined;
 const s3Host = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL).origin : "";
 
 // Politique de sécurité du contenu. Stripe Checkout est une redirection : aucun script tiers n'est chargé.
@@ -21,6 +24,8 @@ const nextConfig: NextConfig = {
   // Le site est rendu à la demande (panier, session) : on garde le modèle de cache classique.
   cacheComponents: false,
   poweredByHeader: false,
+  basePath,
+  trailingSlash: vitrine,
   turbopack: {
     rules: {
       "*.css": { loaders: ["@tailwindcss/turbopack"], as: "*.css" },
@@ -30,6 +35,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: process.env.S3_PUBLIC_URL ? [new URL(`${process.env.S3_PUBLIC_URL.replace(/\/$/, "")}/**`)] : [],
     qualities: [70, 85],
+    unoptimized: vitrine,
   },
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },

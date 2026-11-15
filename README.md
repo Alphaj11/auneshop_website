@@ -114,6 +114,12 @@ Points à ne pas oublier :
 7. Sauvegardes : `pg_dump` quotidien de la base (rétention 30 jours conseillée) et sauvegarde du dossier d'images si stockage local. Testez une restauration.
 8. En-têtes de sécurité (CSP, HSTS, X-Frame-Options…) sont définis dans `next.config.ts`.
 
+### Vitrine de démonstration (GitHub Pages)
+
+`npm run build:vitrine` produit dans `out/` une version statique des pages publiques (accueil, collections, Femme, Homme, fiches, L'atelier, Le projet, Contact, pages légales), servie dans le sous-dossier `/auneshop_website`. Panier, comptes, formulaires et administration y sont désactivés et un bandeau « Démo » est affiché. Il faut une base peuplée (`db:migrate` puis `db:seed`).
+
+Le workflow `.github/workflows/pages.yml` la reconstruit et la publie à chaque mise à jour de `main`. À activer une fois dans GitHub › Settings › Pages › Source : « GitHub Actions ».
+
 ## 6. Remplacer les images et produits de démonstration
 
 Voir [docs/IMAGES-ET-PRODUITS.md](docs/IMAGES-ET-PRODUITS.md). En bref : dans l'administration, créez vos vrais produits (ou modifiez les fiches d'exemple), téléversez vos photos pour chaque couleur (galerie, détouré, porté), décochez « Donnée d'exemple », puis archivez les produits d'exemple restants.

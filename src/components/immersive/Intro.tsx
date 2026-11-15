@@ -27,10 +27,10 @@ type Props = {
   garmentImageUrl?: string;
 };
 
-type P = [number, number];
+export type P = [number, number];
 
 /** Lignes centrales du logo, dans l'ordre d'écriture (repère 605 × 173). */
-const STROKES: P[][] = [
+export const STROKES: P[][] = [
   // ə
   [
     [12, 48], [20, 38], [35, 24], [60, 16], [80, 20], [97, 35], [105, 60], [105, 85], [102, 110], [94, 131],
@@ -55,7 +55,7 @@ const STROKES: P[][] = [
   ],
 ];
 /** Point noué au centre du logo : spirale serrée. */
-const DOT: P[] = Array.from({ length: 34 }, (_, i) => {
+export const DOT: P[] = Array.from({ length: 34 }, (_, i) => {
   const t = i / 33;
   const a = t * Math.PI * 4.2;
   const r = 2 + t * 7.5;
@@ -69,7 +69,7 @@ const H_LOGO = 173;
 const STROKE = 21;
 
 /** Catmull-Rom ré-échantillonnée à pas constant (≈ 1 unité). */
-function sample(points: P[]): P[] {
+export function sample(points: P[]): P[] {
   const dense: P[] = [];
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[Math.max(0, i - 1)];

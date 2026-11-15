@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { VITRINE } from "@/lib/site-mode";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -65,11 +66,12 @@ export function Header({
       >
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 md:h-20 md:px-10">
           <div className="flex flex-1 items-center gap-1 lg:gap-3 xl:gap-8">
-            <button className="-ml-2 p-2 lg:hidden" aria-label="Ouvrir le menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
+            {/* Sous 1280 px, toute la navigation passe dans le menu. */}
+            <button className="-ml-2 p-2 xl:hidden" aria-label="Ouvrir le menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
               <MenuIcon />
             </button>
             <BackButton />
-            <nav aria-label="Navigation principale" className="hidden items-center gap-4 text-[0.72rem] uppercase tracking-[0.12em] lg:flex xl:gap-7 xl:text-[0.8rem] xl:tracking-[0.16em]">
+            <nav aria-label="Navigation principale" className="hidden items-center gap-7 text-[0.8rem] uppercase tracking-[0.16em] xl:flex">
               <button
                 className="link-underline uppercase"
                 aria-expanded={mega}
@@ -79,10 +81,10 @@ export function Header({
               >
                 Collections
               </button>
-              <Link href="/boutique?rayon=femme" className="link-underline" onMouseEnter={() => setMega(false)}>
+              <Link href="/femme" className="link-underline" onMouseEnter={() => setMega(false)}>
                 Femme
               </Link>
-              <Link href="/boutique?rayon=homme" className="link-underline" onMouseEnter={() => setMega(false)}>
+              <Link href="/homme" className="link-underline" onMouseEnter={() => setMega(false)}>
                 Homme
               </Link>
               <Link href="/atelier" className="link-underline" onMouseEnter={() => setMega(false)}>
@@ -96,20 +98,32 @@ export function Header({
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-1 md:gap-3">
+            <nav aria-label="La maison" className="mr-4 hidden items-center gap-7 text-[0.8rem] uppercase tracking-[0.16em] xl:flex">
+              <Link href="/le-projet" className="link-underline">
+                Le projet
+              </Link>
+              <Link href="/contact" className="link-underline">
+                Contact
+              </Link>
+            </nav>
             {isStaff && (
-              <Link href="/admin" className="hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest lg:inline-block">
+              <Link href="/admin" className="hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest 2xl:inline-block">
                 Admin
               </Link>
             )}
-            <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
-              <SearchIcon />
-            </button>
-            <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
-              <HeartIcon />
-            </Link>
-            <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
-              <UserIcon />
-            </Link>
+            {!VITRINE && (
+              <>
+                <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
+                  <SearchIcon />
+                </button>
+                <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
+                  <HeartIcon />
+                </Link>
+                <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
+                  <UserIcon />
+                </Link>
+              </>
+            )}
             <button className="relative -mr-2 p-2" aria-label={`Ouvrir le panier, ${cart.count} article(s)`} onClick={() => setOpen(true)}>
               <motion.span key={lastAddedAt} initial={lastAddedAt ? { rotate: -12, scale: 1.2 } : false} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 12 }} className="block">
                 <BagIcon />
@@ -157,7 +171,7 @@ export function Header({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper lg:block"
+              className="absolute inset-x-0 top-full hidden border-t border-line bg-paper xl:block"
             >
               <div className="mx-auto grid max-w-[1600px] grid-cols-5 gap-6 px-10 py-8">
                 {collections.slice(0, 4).map((c, i) => (
@@ -209,11 +223,13 @@ export function Header({
             <nav className="mt-8 flex flex-col gap-1" aria-label="Menu mobile">
               {[
                 ["/collections", "Collections"],
-                ["/boutique?rayon=femme", "Femme"],
-                ["/boutique?rayon=homme", "Homme"],
+                ["/femme", "Femme"],
+                ["/homme", "Homme"],
                 ["/boutique?nouveautes=1", "Nouveautés"],
                 ["/atelier", "L'atelier"],
-                [signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"],
+                ["/le-projet", "Le projet"],
+                ["/contact", "Contact"],
+                ...(VITRINE ? [] : [[signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"]]),
               ].map(([href, label], i) => (
                 <motion.div key={href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.05, duration: 0.5 }}>
                   <Link href={href} className="block py-2 font-display text-4xl">

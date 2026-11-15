@@ -17,7 +17,8 @@
     "db:reset": "tsx scripts/seed.ts --reset",
     "demo:photos": "tsx scripts/download-demo-photos.ts",
     "demo:assets": "tsx scripts/generate-demo-assets.ts",
-    "admin:create": "tsx scripts/create-admin.ts"
+    "admin:create": "tsx scripts/create-admin.ts",
+    "build:vitrine": "node scripts/build-vitrine.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1156.0",

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { SUR_MESURE_KEY } from "@/components/atelier/sizing";
 import { placeOrder } from "@/app/actions/checkout";
 import type { FormState } from "@/app/actions/auth";
 import type { CartView } from "@/lib/cart";
@@ -38,6 +39,16 @@ export function CheckoutForm({
   const a = addresses.find((x) => x.id === addrId);
   const e = state.fieldErrors ?? {};
   const { totals } = cart;
+  // Précisions saisies dans l'atelier sur mesure : reprises dans la note pour l'atelier.
+  const noteRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(SUR_MESURE_KEY);
+      if (saved && noteRef.current && !noteRef.current.value) noteRef.current.value = saved;
+    } catch {
+      // Stockage indisponible : rien à reprendre.
+    }
+  }, []);
 
   return (
     <form action={action} className="mt-10 grid gap-12 lg:grid-cols-[1fr_400px]" noValidate>
@@ -99,7 +110,7 @@ export function CheckoutForm({
           </div>
           <div>
             <label htmlFor="note" className="label">Note pour l&apos;atelier (facultatif)</label>
-            <textarea id="note" name="note" rows={3} maxLength={1000} className="field" />
+            <textarea ref={noteRef} id="note" name="note" rows={3} maxLength={1000} className="field" />
           </div>
         </fieldset>
 

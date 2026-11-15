@@ -11,6 +11,7 @@ import {
   type CartResult,
 } from "@/app/actions/cart";
 import { useToast } from "@/components/ui/Toaster";
+import { VITRINE, VITRINE_ORDER_NOTICE } from "@/lib/site-mode";
 
 type CartCtx = {
   cart: CartView;
@@ -44,6 +45,12 @@ export function CartProvider({ initial, children }: { initial: CartView; childre
   const run = useCallback(
     (fn: () => Promise<CartResult>, successToast = false) =>
       new Promise<boolean>((resolve) => {
+        // Vitrine statique : pas de serveur, donc pas de panier.
+        if (VITRINE) {
+          toast(VITRINE_ORDER_NOTICE, "info");
+          resolve(false);
+          return;
+        }
         startTransition(async () => {
           try {
             const res = await fn();
@@ -63,7 +70,7 @@ export function CartProvider({ initial, children }: { initial: CartView; childre
   const value: CartCtx = {
     cart,
     open,
-    setOpen,
+    setOpen: (next) => (VITRINE && next ? toast(VITRINE_ORDER_NOTICE, "info") : setOpen(next)),
     pending,
     lastAddedAt,
     add: async (variantId, quantity = 1, opts = {}) => {

@@ -5,7 +5,8 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { Hero } from "@/components/home/Hero";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { Selection } from "@/components/home/Selection";
-import { Story } from "@/components/home/Story";
+import { ScrollStory } from "@/components/atelier/ScrollStory";
+import { VOYAGE_MEDIA, VOYAGE_SCRUB, voyageBlocks } from "@/components/home/voyage-config";
 import { NewsletterForm } from "@/components/shop/NewsletterForm";
 import { Reveal } from "@/components/ui/Reveal";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -65,7 +66,7 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
               imageUrl: c.imageUrl || "/demo/photos/hero.jpg",
               focus: "60% 20%",
               ctaLabel: "Découvrir la femme",
-              ctaHref: "/boutique?rayon=femme",
+              ctaHref: "/femme",
             },
             {
               label: "Homme",
@@ -74,7 +75,7 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
               imageUrl: "/demo/photos/bastien.jpg",
               focus: "60% 25%",
               ctaLabel: "Découvrir l'homme",
-              ctaHref: "/boutique?rayon=homme",
+              ctaHref: "/homme",
             },
             {
               label: "Notre histoire",
@@ -111,7 +112,16 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
       return <FeaturedProducts key={s.id} title={c.title} subtitle={c.subtitle} products={products} />;
     }
     case "story":
-      return <Story key={s.id} title={c.title} subtitle={c.subtitle} body={c.body} />;
+      // Le voyage d'un vêtement, piloté par le scroll (même principe que la page L'atelier).
+      return (
+        <ScrollStory
+          key={s.id}
+          media={VOYAGE_MEDIA}
+          scrub={VOYAGE_SCRUB}
+          blocks={voyageBlocks(c.title, c.subtitle)}
+          label={c.title}
+        />
+      );
     case "collections": {
       const cols = await listCollections();
       return <CollectionsList key={s.id} title={c.title} subtitle={c.subtitle} collections={cols} />;

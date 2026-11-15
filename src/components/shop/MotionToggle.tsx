@@ -1,6 +1,7 @@
 "use client";
 
 import { useMotionPref } from "@/components/ui/MotionPref";
+import { withBase } from "@/lib/site-mode";
 
 export function MotionToggle() {
   const { userOff, setUserOff } = useMotionPref();
@@ -17,7 +18,7 @@ export function MotionToggle() {
             localStorage.removeItem("aune_intro_seen");
           } catch {}
           document.cookie = "aune_intro=; path=/; max-age=0";
-          window.location.href = "/?intro=1";
+          window.location.href = withBase("/?intro=1");
         }}
       >
         Revoir l&apos;introduction

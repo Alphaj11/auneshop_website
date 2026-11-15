@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { and, eq } from "drizzle-orm";
-import { db, schema } from "@/db";
 import { ProductView } from "@/components/shop/ProductView";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getProductBySlug, isVariantAvailable, relatedProducts, getCollection } from "@/lib/catalog";
+import { getProductBySlug, isInWishlist, isVariantAvailable, relatedProducts, getCollection } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,11 +29,7 @@ export default async function ProductPage({ params }: Props) {
   const [product, settings, user] = await Promise.all([getProductBySlug(slug), getSettings(), getCurrentUser()]);
   if (!product) notFound();
 
-  const inWishlist = user
-    ? !!(await db.query.wishlistItems.findFirst({
-        where: and(eq(schema.wishlistItems.userId, user.id), eq(schema.wishlistItems.productId, product.id)),
-      }))
-    : false;
+  const inWishlist = user ? await isInWishlist(user.id, product.id) : false;
 
   const collections = product.collections.map((c) => c.collection).filter((c) => c.status === "published");
   const immersive = collections.find((c) => c.immersiveEnabled && c.displayMode === "immersive" && settings.experience.orbitEnabled);

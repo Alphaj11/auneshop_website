@@ -2,8 +2,17 @@
 
 import { useActionState, useId } from "react";
 import { subscribeNewsletter, type NewsletterState } from "@/app/actions/newsletter";
+import { VITRINE } from "@/lib/site-mode";
 
-export function NewsletterForm({ consentText, source = "site", dark = false }: { consentText: string; source?: string; dark?: boolean }) {
+type Props = { consentText: string; source?: string; dark?: boolean };
+
+export function NewsletterForm(props: Props) {
+  // La vitrine statique n'a pas de serveur : l'inscription se fera sur la boutique.
+  if (VITRINE) return <p className="text-sm opacity-80">Version de démonstration : l&apos;inscription à la lettre sera disponible sur la boutique.</p>;
+  return <NewsletterFormInner {...props} />;
+}
+
+function NewsletterFormInner({ consentText, source = "site", dark = false }: Props) {
   const [state, action, pending] = useActionState<NewsletterState, FormData>(subscribeNewsletter, {});
   const id = useId();
   if (state.ok)

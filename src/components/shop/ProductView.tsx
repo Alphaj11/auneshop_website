@@ -5,6 +5,7 @@ import { useMemo, useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { formatPrice } from "@/lib/money";
 import { toggleWishlist } from "@/app/actions/wishlist";
+import { VITRINE, VITRINE_ORDER_NOTICE } from "@/lib/site-mode";
 import { Price } from "@/components/ui/Price";
 import { useToast } from "@/components/ui/Toaster";
 import { useCart } from "./CartProvider";
@@ -317,6 +318,10 @@ export function ProductView({ product, gallery, variants, signedIn, inWishlist: 
                 aria-label={wish ? "Retirer des favoris" : "Ajouter aux favoris"}
                 disabled={wishPending}
                 onClick={() => {
+                  if (VITRINE) {
+                    toast(VITRINE_ORDER_NOTICE, "info");
+                    return;
+                  }
                   if (!signedIn) {
                     toast("Créez un compte ou connectez-vous pour enregistrer vos favoris.", "info");
                     return;
