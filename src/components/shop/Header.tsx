@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { VITRINE } from "@/lib/site-mode";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,10 +81,10 @@ export function Header({
               >
                 Collections
               </button>
-              <Link href="/boutique?rayon=femme" className="link-underline" onMouseEnter={() => setMega(false)}>
+              <Link href="/femme" className="link-underline" onMouseEnter={() => setMega(false)}>
                 Femme
               </Link>
-              <Link href="/boutique?rayon=homme" className="link-underline" onMouseEnter={() => setMega(false)}>
+              <Link href="/homme" className="link-underline" onMouseEnter={() => setMega(false)}>
                 Homme
               </Link>
               <Link href="/atelier" className="link-underline" onMouseEnter={() => setMega(false)}>
@@ -110,15 +111,19 @@ export function Header({
                 Admin
               </Link>
             )}
-            <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
-              <SearchIcon />
-            </button>
-            <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
-              <HeartIcon />
-            </Link>
-            <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
-              <UserIcon />
-            </Link>
+            {!VITRINE && (
+              <>
+                <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
+                  <SearchIcon />
+                </button>
+                <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
+                  <HeartIcon />
+                </Link>
+                <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
+                  <UserIcon />
+                </Link>
+              </>
+            )}
             <button className="relative -mr-2 p-2" aria-label={`Ouvrir le panier, ${cart.count} article(s)`} onClick={() => setOpen(true)}>
               <motion.span key={lastAddedAt} initial={lastAddedAt ? { rotate: -12, scale: 1.2 } : false} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 12 }} className="block">
                 <BagIcon />
@@ -218,13 +223,13 @@ export function Header({
             <nav className="mt-8 flex flex-col gap-1" aria-label="Menu mobile">
               {[
                 ["/collections", "Collections"],
-                ["/boutique?rayon=femme", "Femme"],
-                ["/boutique?rayon=homme", "Homme"],
+                ["/femme", "Femme"],
+                ["/homme", "Homme"],
                 ["/boutique?nouveautes=1", "Nouveautés"],
                 ["/atelier", "L'atelier"],
                 ["/le-projet", "Le projet"],
                 ["/contact", "Contact"],
-                [signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"],
+                ...(VITRINE ? [] : [[signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"]]),
               ].map(([href, label], i) => (
                 <motion.div key={href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.05, duration: 0.5 }}>
                   <Link href={href} className="block py-2 font-display text-4xl">

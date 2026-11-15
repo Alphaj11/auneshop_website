@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { formatPrice } from "@/lib/money";
 import { useCart } from "@/components/shop/CartProvider";
+import { withBase } from "@/lib/site-mode";
 import { recommendSize, SUR_MESURE_KEY } from "./sizing";
 
 export type SurMesureProduct = {
@@ -226,7 +227,7 @@ export function SurMesure({ products }: { products: SurMesureProduct[] }) {
               )}
             </div>
             <div className="mt-4 flex items-baseline justify-between">
-              <a href={`/produits/${product.slug}`} className="font-display text-2xl link-underline">
+              <a href={withBase(`/produits/${product.slug}`)} className="font-display text-2xl link-underline">
                 {product.name}
               </a>
               <span className="tabular-nums">{formatPrice(product.priceCents)}</span>

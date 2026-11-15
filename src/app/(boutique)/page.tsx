@@ -66,7 +66,7 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
               imageUrl: c.imageUrl || "/demo/photos/hero.jpg",
               focus: "60% 20%",
               ctaLabel: "Découvrir la femme",
-              ctaHref: "/boutique?rayon=femme",
+              ctaHref: "/femme",
             },
             {
               label: "Homme",
@@ -75,7 +75,7 @@ async function renderSection(s: HomeSection, consentText: string, newsletterEnab
               imageUrl: "/demo/photos/bastien.jpg",
               focus: "60% 25%",
               ctaLabel: "Découvrir l'homme",
-              ctaHref: "/boutique?rayon=homme",
+              ctaHref: "/homme",
             },
             {
               label: "Notre histoire",

@@ -11,6 +11,7 @@ import { isStaff } from "@/lib/auth/permissions";
 import { getCartView } from "@/lib/cart";
 import { listCollections } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
+import { VITRINE } from "@/lib/site-mode";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,11 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
       <ToastProvider>
         <CartProvider initial={cart}>
           <div className="paper-grain">
+            {VITRINE && (
+              <p className="pointer-events-none fixed bottom-3 left-3 z-[80] rounded-full bg-ink/90 px-3 py-1 text-[11px] uppercase tracking-widest text-paper">
+                Démo · aucune commande réelle
+              </p>
+            )}
             {settings.intro.enabled && (
               <IntroGate
                 storeName={settings.store.name}

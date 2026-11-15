@@ -3,6 +3,7 @@ import Link from "next/link";
 import { InquiryForm } from "@/components/account/AccountForms";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSettings } from "@/lib/settings";
+import { VITRINE } from "@/lib/site-mode";
 
 export const metadata: Metadata = { title: "Contact", alternates: { canonical: "/contact" } };
 
@@ -53,7 +54,19 @@ export default async function Page() {
             ))}
           </ul>
         </div>
-        <InquiryForm name={user ? `${user.firstName} ${user.lastName}`.trim() : undefined} email={user?.email} />
+        {VITRINE ? (
+          <div className="self-start rounded-lg border border-line p-8">
+            <p className="font-display text-2xl">Version de démonstration</p>
+            <p className="mt-3 text-ink-soft">Le formulaire sera actif sur la boutique. En attendant, écrivez à l&apos;atelier par email.</p>
+            {store.email && (
+              <a href={`mailto:${store.email}`} className="btn btn-primary mt-6 inline-flex">
+                Écrire un email
+              </a>
+            )}
+          </div>
+        ) : (
+          <InquiryForm name={user ? `${user.firstName} ${user.lastName}`.trim() : undefined} email={user?.email} />
+        )}
       </div>
 
       <section className="mt-24 border-t border-line pt-12" aria-labelledby="ressources-titre">
