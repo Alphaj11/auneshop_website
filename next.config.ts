@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
+// Vitrine statique (GitHub Pages), construite par scripts/build-vitrine.mjs.
+const vitrine = process.env.VITRINE_BUILD === "1";
+const basePath = vitrine ? (process.env.NEXT_PUBLIC_BASE_PATH ?? "") : "";
 const s3Host = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL).origin : "";
 
 // Politique de sécurité du contenu. Stripe Checkout est une redirection : aucun script tiers n'est chargé.
@@ -34,22 +37,31 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
   },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "Content-Security-Policy", value: csp },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(self)" },
-          ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]),
-        ],
-      },
-      { source: "/demo/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=86400" }] },
-    ];
-  },
+  ...(vitrine && {
+    output: "export" as const,
+    basePath: basePath || undefined,
+    trailingSlash: true,
+    images: { unoptimized: true },
+  }),
+  // Une exportation statique ne sert pas d'en-têtes : ils sont réservés au site complet.
+  headers: vitrine ? undefined : headers,
 };
+
+async function headers() {
+  return [
+    {
+      source: "/:path*",
+      headers: [
+        { key: "Content-Security-Policy", value: csp },
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: "X-Frame-Options", value: "DENY" },
+        { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(self)" },
+        ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]),
+      ],
+    },
+    { source: "/demo/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=86400" }] },
+  ];
+}
 
 export default nextConfig;

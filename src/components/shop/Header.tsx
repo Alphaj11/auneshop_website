@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { BackButton } from "./BackButton";
 import { useCart } from "./CartProvider";
 import { BagIcon, HeartIcon, MenuIcon, SearchIcon, UserIcon } from "./Icons";
+import { VITRINE } from "@/lib/site-mode";
 
 type NavCollection = { slug: string; name: string; tagline: string; coverImageUrl: string | null };
 
@@ -110,15 +111,20 @@ export function Header({
                 Admin
               </Link>
             )}
-            <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
-              <SearchIcon />
-            </button>
-            <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
-              <HeartIcon />
-            </Link>
-            <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
-              <UserIcon />
-            </Link>
+            {/* La vitrine statique n'a ni recherche ni compte. */}
+            {!VITRINE && (
+              <>
+                <button className="p-2" aria-label="Rechercher" aria-expanded={search} onClick={() => setSearch((s) => !s)}>
+                  <SearchIcon />
+                </button>
+                <Link href={signedIn ? "/compte/favoris" : "/connexion?suivant=/compte/favoris"} className="hidden p-2 sm:block" aria-label="Favoris">
+                  <HeartIcon />
+                </Link>
+                <Link href={signedIn ? "/compte" : "/connexion"} className="p-2" aria-label={signedIn ? "Mon compte" : "Se connecter"}>
+                  <UserIcon />
+                </Link>
+              </>
+            )}
             <button className="relative -mr-2 p-2" aria-label={`Ouvrir le panier, ${cart.count} article(s)`} onClick={() => setOpen(true)}>
               <motion.span key={lastAddedAt} initial={lastAddedAt ? { rotate: -12, scale: 1.2 } : false} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 12 }} className="block">
                 <BagIcon />
@@ -224,7 +230,7 @@ export function Header({
                 ["/atelier", "L'atelier"],
                 ["/le-projet", "Le projet"],
                 ["/contact", "Contact"],
-                [signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"],
+                ...(VITRINE ? [] : [[signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"]]),
               ].map(([href, label], i) => (
                 <motion.div key={href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.05, duration: 0.5 }}>
                   <Link href={href} className="block py-2 font-display text-4xl">

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { formatPrice } from "@/lib/money";
 import { useCart } from "./CartProvider";
+import { VITRINE, VITRINE_ORDER_NOTICE } from "@/lib/site-mode";
 
 /** Contenu du panier, partagé entre le tiroir et la page /panier. */
 export function CartContents({ variant = "drawer" }: { variant?: "drawer" | "page" }) {
@@ -210,6 +211,9 @@ export function CartContents({ variant = "drawer" }: { variant?: "drawer" | "pag
             Plus que {formatPrice(totals.freeShippingRemainingCents)} pour la livraison offerte.
           </p>
         )}
+        {VITRINE ? (
+          <p className="mt-5 rounded-[3px] bg-paper-2 px-4 py-3 text-center text-sm text-ink-soft">{VITRINE_ORDER_NOTICE}</p>
+        ) : (
         <Link
           href="/commande"
           onClick={() => setOpen(false)}
@@ -218,10 +222,11 @@ export function CartContents({ variant = "drawer" }: { variant?: "drawer" | "pag
         >
           Passer commande
         </Link>
+        )}
         {cart.hasProblems && (
           <p className="mt-2 text-xs text-danger">Retirez ou modifiez les articles indisponibles pour continuer.</p>
         )}
-        {variant === "drawer" && (
+        {variant === "drawer" && !VITRINE && (
           <Link href="/panier" onClick={() => setOpen(false)} className="link-underline mt-3 block text-center text-sm">
             Voir le panier
           </Link>

@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useMotionPref } from "@/components/ui/MotionPref";
 import type { BasketCard } from "./projet-content";
+import { withBase } from "@/lib/site-mode";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 /** Inclinaisons stables, d'aspect posé à la main. */
@@ -281,7 +282,7 @@ export function LaundryBasket({ cards }: { cards: BasketCard[] }) {
             {cards.map((c, i) => (
               <li key={c.href} data-card style={{ opacity: 0 }}>
                 <a
-                  href={c.href}
+                  href={c.external ? c.href : withBase(c.href)}
                   target={c.external ? "_blank" : undefined}
                   rel={c.external ? "noopener noreferrer" : undefined}
                   className="block h-full rounded-[3px] border border-line bg-[#FBF7EF] p-5 text-left shadow-[0_18px_40px_-24px_rgba(62,8,18,.45)] transition-transform hover:-translate-y-1 hover:rotate-0"

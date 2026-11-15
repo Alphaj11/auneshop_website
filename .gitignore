@@ -50,3 +50,6 @@ next-env.d.ts
 .admin-password.local
 setup-db.sql
 
+
+# Vitrine statique : copie de travail de la construction
+/.vitrine-build/

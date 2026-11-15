@@ -150,3 +150,18 @@ Les informations produit d'exemple (matières, fabrication, délais) sont fictiv
 - Audit d'accessibilité complet avec lecteur d'écran (les bases sont en place : navigation clavier, libellés, contrastes, mouvement réduit) et test sur appareils réels.
 - Facturation : la boutique n'émet pas de factures PDF ; à brancher sur votre outil comptable si nécessaire.
 - Non inclus volontairement : essayage virtuel 3D (la scène immersive utilise des visuels 2D préparés et le dit clairement).
+
+## Vitrine statique (GitHub Pages)
+
+Une version de démonstration, sans base de données ni compte, peut être publiée sur GitHub Pages :
+
+```bash
+npm run vitrine:data    # instantané du catalogue (local, base requise) → src/vitrine/data.json, à committer
+npm run build:vitrine   # site statique dans out/, servi sous /auneshop_website
+```
+
+La construction se fait dans une copie de travail (`.vitrine-build/`) : les fichiers `*.vitrine.ts(x)`
+y remplacent leurs homologues (données lues dans l'instantané, actions remplacées par un message de
+démonstration). Le site complet n'est pas modifié. Pages exclues : administration (dont Qamar), compte,
+connexion, panier, commande, recherche, newsletter, API. Le workflow `.github/workflows/pages.yml`
+publie la vitrine à chaque push sur `main` (activer Pages avec la source « GitHub Actions »).
