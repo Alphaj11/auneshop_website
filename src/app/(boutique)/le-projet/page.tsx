@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LaundryBasket } from "@/components/projet/LaundryBasket";
-import { TiltPortrait } from "@/components/projet/TiltPortrait";
+import { MotherChild } from "@/components/projet/MotherChild";
 import { BASKET, PROJET } from "@/components/projet/projet-content";
 import { Reveal } from "@/components/ui/Reveal";
 
@@ -41,11 +41,12 @@ export default function LeProjetPage() {
         </div>
 
         <div className="order-first lg:order-2">
-          <TiltPortrait
-            src="/media/projet/mere-enfant.jpg"
-            alt="Une mère en sari tient son enfant dans ses bras et sourit."
-            credit="Photo d'illustration : Dharmjeet Kumar, Pexels"
-          />
+          <figure className="mx-auto w-full max-w-[24rem]">
+            <div className="aspect-[2/3] overflow-hidden rounded-t-full shadow-[0_40px_80px_-40px_rgba(62,8,18,.55)]">
+              <MotherChild />
+            </div>
+            <figcaption className="mt-3 text-center text-[11px] text-ink-mute">Illustration originale</figcaption>
+          </figure>
         </div>
 
         <div className="lg:order-3">
