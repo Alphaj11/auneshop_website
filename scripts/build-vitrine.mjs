@@ -25,7 +25,7 @@ const OUT = "out";
 /** Pages qui n'ont pas de sens sans serveur : jamais publiées dans la vitrine. */
 const EXCLUDED = ["/admin", "/compte", "/connexion", "/inscription", "/panier", "/commande", "/recherche", "/mot-de-passe-oublie", "/reinitialiser", "/newsletter", "/api", "/media"];
 /** Points de départ du parcours, en plus des liens trouvés dans les pages. */
-const SEEDS = ["/", "/collections", "/boutique", "/femme", "/homme", "/atelier", "/le-projet", "/contact", "/faq", "/livraison-retours", "/cgv", "/mentions-legales", "/confidentialite", "/cookies"];
+const SEEDS = ["/", "/collections", "/boutique", "/femme", "/homme", "/atelier", "/le-projet", "/contact", "/faq", "/livraison-retours", "/cgv", "/mentions-legales", "/confidentialite", "/cookies", "/espace-admin"];
 /** Dossiers de public/ référencés par des chemins absolus qu'il faut préfixer par le sous-dossier. */
 const PUBLIC_DIRS = ["demo", "brand", "fonts", "media"];
 
@@ -35,10 +35,17 @@ console.log(`› Build Next.js (vitrine, sous-dossier « ${BASE || "/"} »)`);
 execSync("npx next build", { stdio: "inherit", env });
 
 console.log("› Démarrage du serveur");
-const server = spawn("npx", ["next", "start", "-p", String(PORT), "-H", "127.0.0.1"], { env, stdio: ["ignore", "inherit", "inherit"], detached: true });
+// Lancé directement avec node (npx n'est pas exécutable tel quel sous Windows).
+const nextBin = join("node_modules", "next", "dist", "bin", "next");
+const server = spawn(process.execPath, [nextBin, "start", "-p", String(PORT), "-H", "127.0.0.1"], {
+  env,
+  stdio: ["ignore", "inherit", "inherit"],
+  detached: process.platform !== "win32",
+});
 const stop = () => {
   try {
-    process.kill(-server.pid);
+    if (process.platform === "win32") server.kill();
+    else process.kill(-server.pid);
   } catch {}
 };
 process.on("exit", stop);

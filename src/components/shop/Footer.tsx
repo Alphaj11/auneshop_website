@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import type { StoreSettings } from "@/lib/settings-schema";
 import { MotionToggle } from "./MotionToggle";
+import { VITRINE } from "@/lib/site-mode";
 
 export function Footer({ settings }: { settings: StoreSettings }) {
   const social = Object.entries({
@@ -38,7 +39,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
               <p className="eyebrow mb-4 !text-paper/60">Aide</p>
               <ul className="space-y-2.5">
                 <li><Link className="link-underline" href="/livraison-retours">Livraison et retours</Link></li>
-                <li><Link className="link-underline" href="/compte/commandes">Suivre une commande</Link></li>
+                {!VITRINE && <li><Link className="link-underline" href="/compte/commandes">Suivre une commande</Link></li>}
                 <li><Link className="link-underline" href="/cgv">Conditions générales de vente</Link></li>
               </ul>
             </div>

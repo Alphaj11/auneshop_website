@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { VITRINE } from "@/lib/site-mode";
+import { VITRINE, VITRINE_ADMIN_HREF } from "@/lib/site-mode";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -106,7 +106,12 @@ export function Header({
                 Contact
               </Link>
             </nav>
-            {isStaff && (
+            {VITRINE && (
+              <Link href={VITRINE_ADMIN_HREF} className="mr-1 hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest md:inline-block">
+                Admin
+              </Link>
+            )}
+            {isStaff && !VITRINE && (
               <Link href="/admin" className="hidden rounded-full border border-current px-3 py-1 text-xs uppercase tracking-widest 2xl:inline-block">
                 Admin
               </Link>
@@ -229,7 +234,7 @@ export function Header({
                 ["/atelier", "L'atelier"],
                 ["/le-projet", "Le projet"],
                 ["/contact", "Contact"],
-                ...(VITRINE ? [] : [[signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"]]),
+                ...(VITRINE ? [[VITRINE_ADMIN_HREF, "Espace admin"]] : [[signedIn ? "/compte" : "/connexion", signedIn ? "Mon compte" : "Se connecter"]]),
               ].map(([href, label], i) => (
                 <motion.div key={href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.05, duration: 0.5 }}>
                   <Link href={href} className="block py-2 font-display text-4xl">
