@@ -1,5 +1,7 @@
 # Vitrine statique sur GitHub Pages : une photographie des pages publiques du site,
 # régénérée à chaque mise à jour de main. Voir scripts/build-vitrine.mjs.
+# Le site généré est poussé sur la branche vitrine-pages, que GitHub Pages publie
+# (Settings › Pages › Deploy from a branch › vitrine-pages, dossier racine).
 # Aucun secret n'est utilisé : la base est une base jetable remplie avec les données de démo.
 name: Vitrine GitHub Pages
 
@@ -9,9 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -51,16 +51,12 @@ jobs:
       - run: npm run db:migrate
       - run: npm run db:seed
       - run: npm run build:vitrine
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publication sur la branche vitrine-pages
+        run: |
+          cd out
+          git init -q -b vitrine-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Vitrine générée depuis ${GITHUB_SHA::7}"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" vitrine-pages

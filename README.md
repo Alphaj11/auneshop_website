@@ -118,7 +118,7 @@ Points à ne pas oublier :
 
 `npm run build:vitrine` produit dans `out/` une version statique des pages publiques (accueil, collections, Femme, Homme, fiches, L'atelier, Le projet, Contact, pages légales), servie dans le sous-dossier `/auneshop_website`. Panier, comptes, formulaires et administration y sont désactivés et un bandeau « Démo » est affiché. Il faut une base peuplée (`db:migrate` puis `db:seed`).
 
-Le workflow `.github/workflows/pages.yml` la reconstruit et la publie à chaque mise à jour de `main`. À activer une fois dans GitHub › Settings › Pages › Source : « GitHub Actions ».
+Le workflow `.github/workflows/pages.yml` la reconstruit et la publie à chaque mise à jour de `main`. Le site généré est poussé sur la branche `vitrine-pages`, publiée par GitHub Pages (Settings › Pages › Deploy from a branch › `vitrine-pages`, dossier racine) : https://alphaj11.github.io/auneshop_website/
 
 ## 6. Remplacer les images et produits de démonstration
 
