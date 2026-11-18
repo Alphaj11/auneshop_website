@@ -1,0 +1,12 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /compte
+Disallow: /commande
+Disallow: /panier
+Disallow: /connexion
+Disallow: /inscription
+Disallow: /recherche
+
+Sitemap: http://localhost:3000/sitemap.xml
