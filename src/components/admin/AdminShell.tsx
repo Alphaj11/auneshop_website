@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/Toaster";
+import { VITRINE } from "@/lib/site-mode";
 import type { Permission } from "@/lib/auth/permissions";
 
 const nav: { href: string; label: string; perm: Permission; icon: string }[] = [
@@ -40,6 +42,18 @@ export function AdminShell({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const toast = useToast();
+  // Vitrine : aucun envoi possible (pas de serveur). On bloque tous les formulaires avant React.
+  useEffect(() => {
+    if (!VITRINE) return;
+    const block = (e: Event) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      toast("Démonstration en lecture seule : les modifications seront possibles sur la version hébergée.", "info");
+    };
+    document.addEventListener("submit", block, true);
+    return () => document.removeEventListener("submit", block, true);
+  }, [toast]);
   const items = nav.filter((n) => allowed.includes(n.perm));
   const isActive = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname.startsWith(href));
 
@@ -70,7 +84,7 @@ export function AdminShell({
         <p>{roleLabel}</p>
         <div className="mt-3 flex gap-3">
           <Link href="/" className="underline">Voir le site</Link>
-          <form action={logout}><button className="underline">Déconnexion</button></form>
+          {!VITRINE && <form action={logout}><button className="underline">Déconnexion</button></form>}
         </div>
       </div>
     </div>
@@ -98,6 +112,11 @@ export function AdminShell({
             Paiement : {paymentMode === "demo" ? "démonstration" : paymentMode === "stripe_test" ? "Stripe test" : "Stripe réel"}
           </span>
         </header>
+        {VITRINE && (
+          <p className="border-b border-line bg-terre/10 px-4 py-2 text-xs text-terre-ink md:px-8">
+            Démonstration en lecture seule, avec des données d&apos;exemple. Rien n&apos;est enregistré.
+          </p>
+        )}
         <main id="contenu" className="px-4 py-8 md:px-8">{children}</main>
       </div>
     </div>

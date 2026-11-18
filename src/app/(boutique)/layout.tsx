@@ -11,6 +11,7 @@ import { isStaff } from "@/lib/auth/permissions";
 import { getCartView } from "@/lib/cart";
 import { listCollections } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
+import Link from "next/link";
 import { VITRINE } from "@/lib/site-mode";
 
 export const dynamic = "force-dynamic";
@@ -29,9 +30,12 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
         <CartProvider initial={cart}>
           <div className="paper-grain">
             {VITRINE && (
-              <p className="pointer-events-none fixed bottom-3 left-3 z-[80] rounded-full bg-ink/90 px-3 py-1 text-[11px] uppercase tracking-widest text-paper">
-                Démo · aucune commande réelle
-              </p>
+              <div className="fixed bottom-3 left-3 z-[80] flex items-center gap-2 rounded-full bg-ink/90 py-1 pl-3 pr-1 text-[11px] uppercase tracking-widest text-paper">
+                <span className="pointer-events-none">Démo · aucune commande réelle</span>
+                <Link href="/admin" className="rounded-full bg-paper px-3 py-1 text-ink transition-colors hover:bg-paper/80">
+                  Espace admin
+                </Link>
+              </div>
             )}
             {settings.intro.enabled && (
               <IntroGate

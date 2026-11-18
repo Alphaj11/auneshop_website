@@ -2,6 +2,14 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { getCurrentUser, type SessionUser } from "./session";
 import { can, type Permission } from "./permissions";
+import { VITRINE } from "@/lib/site-mode";
+
+/**
+ * Vitrine statique : l’admin est photographié en lecture seule pendant la génération, sans
+ * session. Seules les PAGES sont ouvertes ; les actions serveur gardent requirePermission.
+ * NEXT_PUBLIC_VITRINE ne doit jamais être activé sur un serveur public.
+ */
+const VITRINE_STAFF: SessionUser = { id: "00000000-0000-0000-0000-000000000000", email: "demo@aune.test", role: "super_admin", firstName: "Démo", lastName: "Aune" };
 
 export class AuthorizationError extends Error {
   constructor() {
@@ -18,6 +26,7 @@ export async function requireUser(next = "/compte"): Promise<SessionUser> {
 
 /** Pour les pages d'administration : redirige si non autorisé. */
 export async function requireStaffPage(permission: Permission = "admin.access"): Promise<SessionUser> {
+  if (VITRINE) return VITRINE_STAFF;
   const user = await getCurrentUser();
   if (!user) redirect("/admin/connexion");
   if (!can(user.role, "admin.access")) redirect("/");

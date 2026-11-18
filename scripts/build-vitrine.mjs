@@ -23,9 +23,9 @@ const ORIGIN = `http://127.0.0.1:${PORT}`;
 const OUT = "out";
 
 /** Pages qui n'ont pas de sens sans serveur : jamais publiées dans la vitrine. */
-const EXCLUDED = ["/admin", "/compte", "/connexion", "/inscription", "/panier", "/commande", "/recherche", "/mot-de-passe-oublie", "/reinitialiser", "/newsletter", "/api", "/media"];
+const EXCLUDED = ["/admin/connexion", "/admin/recherche", "/admin/commandes/export", "/admin/messages/newsletter", "/compte", "/connexion", "/inscription", "/panier", "/commande", "/recherche", "/mot-de-passe-oublie", "/reinitialiser", "/newsletter", "/api", "/media"];
 /** Points de départ du parcours, en plus des liens trouvés dans les pages. */
-const SEEDS = ["/", "/collections", "/boutique", "/femme", "/homme", "/atelier", "/le-projet", "/contact", "/faq", "/livraison-retours", "/cgv", "/mentions-legales", "/confidentialite", "/cookies"];
+const SEEDS = ["/", "/admin", "/collections", "/boutique", "/femme", "/homme", "/atelier", "/le-projet", "/contact", "/faq", "/livraison-retours", "/cgv", "/mentions-legales", "/confidentialite", "/cookies"];
 /** Dossiers de public/ référencés par des chemins absolus qu'il faut préfixer par le sous-dossier. */
 const PUBLIC_DIRS = ["demo", "brand", "fonts", "media"];
 
@@ -139,6 +139,8 @@ async function crawl() {
 function normalize(path) {
   const rel = path.slice(BASE.length) || "/";
   if (EXCLUDED.some((p) => rel === p || rel.startsWith(p + "/"))) return null;
+  // Exports CSV de l'admin (ex. /admin/clients/<id>/export) : pas des pages.
+  if (/\/export\/?$/.test(rel)) return null;
   return BASE + (rel.endsWith("/") ? rel : rel + "/");
 }
 
